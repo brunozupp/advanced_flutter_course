@@ -31,7 +31,7 @@ class NextEventPlayer {
 
     if(names.length > 1) {
       lastLetter = names.last[0];
-    } else if(names.length == 1 && names.first.length > 1) {
+    } else if(names.first.length > 1) {
       lastLetter = names.first[1];
     } else {
       lastLetter = "";
