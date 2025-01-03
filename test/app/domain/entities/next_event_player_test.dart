@@ -19,7 +19,7 @@ class NextEventPlayer {
 
   String get initials {
 
-    final names = name.split(" ");
+    final names = name.toUpperCase().split(" ");
 
     final firstLetter = names.first[0];
 
@@ -83,7 +83,17 @@ void main() {
 
       final sut = makeSut("Bruno");
 
-      expect(sut, "Br");
+      expect(sut, "BR");
+    },
+  );
+
+  test(
+    "Should return the initials in uppercase",
+    () {
+
+      final sut = makeSut("bruno");
+
+      expect(sut, "BR");
     },
   );
 }
