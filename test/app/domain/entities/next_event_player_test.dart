@@ -30,45 +30,44 @@ class NextEventPlayer {
 
 void main() {
 
-  test(
-    "Should return the first letter from the first and last names when the person has just one surname",
-    () {
+    /// As my tests depend on the name only, I can create a method
+    /// to facilitate and optimize the process of creating the object
+    /// that is being tested.
+    NextEventPlayer makeSut(String name) => NextEventPlayer(
+      id: "",
+      name: name,
+      isConfirmed: true,
+    );
+
+    test(
+      "Should return the first letter from the first and last names when the person has just one surname",
+      () {
 
         /// As the only information I am interested to test is the name
         /// I can take off the attributes that is optional.
-        final player = NextEventPlayer(
-            id: "",
-            name: "Bruno Noveli",
-            isConfirmed: true,
-        );
+        /// sut -> it's a conventional word in the TDD used to point the object that
+        /// is being tested. It means System Under Test
+        /// Some people like to put 'out' that means Object Under Test. One point in
+        /// this is that in some programming languages the word out is a key word from
+        /// the language, so it can lead to problems.
+        final sut = makeSut("Bruno Noveli");
 
         /// To test something I need to do 3 steps. Generally devs call
         /// these steps from both conventions:
         /// Triple A (aaa) = arrange, act, asset
         /// Given, when, then
 
-        expect(player.getInitials(), "BN");
-    },
+        expect(sut.getInitials(), "BN");
+      },
   );
 
   test(
     "Should return the first letter from the first and last names when the person has two surnames or more",
     () {
 
-        /// As the only information I am interested to test is the name
-        /// I can take off the attributes that is optional.
-        final player = NextEventPlayer(
-            id: "",
-            name: "Bruno Noveli Zupp",
-            isConfirmed: true,
-        );
+      final sut = makeSut("Bruno Noveli Zupp");
 
-        /// To test something I need to do 3 steps. Generally devs call
-        /// these steps from both conventions:
-        /// Triple A (aaa) = arrange, act, asset
-        /// Given, when, then
-
-        expect(player.getInitials(), "BZ");
+      expect(sut.getInitials(), "BZ");
     },
   );
 }
