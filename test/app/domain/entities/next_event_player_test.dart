@@ -19,6 +19,10 @@ class NextEventPlayer {
 
   String get initials {
 
+    if(name.isEmpty) {
+      return "-";
+    }
+
     final names = name.toUpperCase().split(" ");
 
     final firstLetter = names.first[0];
@@ -107,9 +111,21 @@ void main() {
     "Should return just one letter when the name contains just one letter",
     () {
 
-      final sut = makeSut("B");
+      final sutUppercase = makeSut("B");
+      expect(sutUppercase, "B");
 
-      expect(sut, "B");
+      final sutLowercase = makeSut("s");
+      expect(sutLowercase, "S");
+    },
+  );
+
+  test(
+    "Should return - when the name is empty",
+    () {
+
+      final sut = makeSut("");
+
+      expect(sut, "-");
     },
   );
 }
