@@ -23,9 +23,15 @@ class NextEventPlayer {
 
     final firstLetter = names.first[0];
 
-    final lastLetter = names.length > 1
-      ? names.last[0]
-      : names.first[1];
+    final String lastLetter;
+
+    if(names.length > 1) {
+      lastLetter = names.last[0];
+    } else if(names.length == 1 && names.first.length > 1) {
+      lastLetter = names.first[1];
+    } else {
+      lastLetter = "";
+    }
 
     return "$firstLetter$lastLetter";
   }
@@ -94,6 +100,16 @@ void main() {
       final sut = makeSut("bruno");
 
       expect(sut, "BR");
+    },
+  );
+
+  test(
+    "Should return just one letter when the name contains just one letter",
+    () {
+
+      final sut = makeSut("B");
+
+      expect(sut, "B");
     },
   );
 }
