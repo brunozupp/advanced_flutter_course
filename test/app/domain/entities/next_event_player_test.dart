@@ -22,7 +22,10 @@ class NextEventPlayer {
     final names = name.split(" ");
 
     final firstLetter = names.first[0];
-    final lastLetter = names.last[0];
+
+    final lastLetter = names.length > 1
+      ? names.last[0]
+      : names.first[1];
 
     return "$firstLetter$lastLetter";
   }
@@ -71,6 +74,16 @@ void main() {
       final sut = makeSut("Bruno Noveli Zupp");
 
       expect(sut, "BZ");
+    },
+  );
+
+  test(
+    "Should return the first two letters from the first name when the player doesn't have surname",
+    () {
+
+      final sut = makeSut("Bruno");
+
+      expect(sut, "Br");
     },
   );
 }
