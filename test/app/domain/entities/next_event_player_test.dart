@@ -21,14 +21,17 @@ class NextEventPlayer {
 
         final names = name.split(" ");
 
-        return "${names.first[0]}${names.last[0]}";
+        final firstLetter = names.first[0];
+        final lastLetter = names.last[0];
+
+        return "$firstLetter$lastLetter";
     }
 }
 
 void main() {
 
   test(
-    "Should return the first letter of the first and last names",
+    "Should return the first letter from the first and last names when the person has just one surname",
     () {
 
         /// As the only information I am interested to test is the name
@@ -45,6 +48,27 @@ void main() {
         /// Given, when, then
 
         expect(player.getInitials(), "BN");
+    },
+  );
+
+  test(
+    "Should return the first letter from the first and last names when the person has two surnames or more",
+    () {
+
+        /// As the only information I am interested to test is the name
+        /// I can take off the attributes that is optional.
+        final player = NextEventPlayer(
+            id: "",
+            name: "Bruno Noveli Zupp",
+            isConfirmed: true,
+        );
+
+        /// To test something I need to do 3 steps. Generally devs call
+        /// these steps from both conventions:
+        /// Triple A (aaa) = arrange, act, asset
+        /// Given, when, then
+
+        expect(player.getInitials(), "BZ");
     },
   );
 }
