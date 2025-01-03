@@ -1,31 +1,31 @@
 import 'package:flutter_test/flutter_test.dart';
 
 class NextEventPlayer {
-    final String id;
-    final String name;
-    final String? photo;
-    final String? position;
-    final bool isConfirmed;
-    final DateTime? confirmationDate;
+  final String id;
+  final String name;
+  final String? photo;
+  final String? position;
+  final bool isConfirmed;
+  final DateTime? confirmationDate;
 
-    NextEventPlayer({
-        required this.id,
-        required this.name,
-        this.photo,
-        this.position,
-        required this.isConfirmed,
-        this.confirmationDate,
-    });
+  NextEventPlayer({
+    required this.id,
+    required this.name,
+    this.photo,
+    this.position,
+    required this.isConfirmed,
+    this.confirmationDate,
+  });
 
-    String getInitials() {
+  String get initials {
 
-        final names = name.split(" ");
+    final names = name.split(" ");
 
-        final firstLetter = names.first[0];
-        final lastLetter = names.last[0];
+    final firstLetter = names.first[0];
+    final lastLetter = names.last[0];
 
-        return "$firstLetter$lastLetter";
-    }
+    return "$firstLetter$lastLetter";
+  }
 }
 
 void main() {
@@ -33,11 +33,14 @@ void main() {
     /// As my tests depend on the name only, I can create a method
     /// to facilitate and optimize the process of creating the object
     /// that is being tested.
-    NextEventPlayer makeSut(String name) => NextEventPlayer(
+    /// And to focus more in the enterprise rule from this object I can be
+    /// more direct and return the initials from this method, because I
+    /// jsut care about the initials to test.
+    String makeSut(String name) => NextEventPlayer(
       id: "",
       name: name,
       isConfirmed: true,
-    );
+    ).initials;
 
     test(
       "Should return the first letter from the first and last names when the person has just one surname",
@@ -57,7 +60,7 @@ void main() {
         /// Triple A (aaa) = arrange, act, asset
         /// Given, when, then
 
-        expect(sut.getInitials(), "BN");
+        expect(sut, "BN");
       },
   );
 
@@ -67,7 +70,7 @@ void main() {
 
       final sut = makeSut("Bruno Noveli Zupp");
 
-      expect(sut.getInitials(), "BZ");
+      expect(sut, "BZ");
     },
   );
 }
