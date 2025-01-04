@@ -19,11 +19,26 @@ class NextEventPlayer {
 
   String get initials {
 
-    if(name.isEmpty) {
+    /// TODO: this case should be studied, because whitespaces in the name
+    /// is something related to the rules from the instantiation from a class.
+    /// To understand clearer:
+    /// .toUpperCase is just applied to a specific rule in my application, it
+    /// is not related to the value itself. It will just transform to fit a
+    /// specific flow specified by the rule.
+    /// .trim is a treatment that should have been made before the instance creation
+    /// because this affects how the entity is understood by the system. So it can
+    /// be defined as a rule from the instantiation.
+    ///
+    /// For now, I will let the trim here as a treatment to show the initials in
+    /// the correct way. But, doing this rule in the instantiation this treatment
+    /// wouldn't be necessary.
+    final nameTrim = name.trim();
+
+    if(nameTrim.isEmpty) {
       return "-";
     }
 
-    final names = name.toUpperCase().split(" ");
+    final names = nameTrim.toUpperCase().split(" ");
 
     final firstLetter = names.first[0];
 
@@ -126,6 +141,24 @@ void main() {
       final sut = makeSut("");
 
       expect(sut, "-");
+    },
+  );
+
+  test(
+    "Should ignore extra whitespaces",
+    () {
+
+      final sut1 = makeSut("Bruno Noveli ");
+      final sut2 = makeSut(" Bruno Noveli");
+      final sut3 = makeSut(" Bruno Noveli ");
+      final sut4 = makeSut(" ");
+      final sut5 = makeSut("      ");
+
+      expect(sut1, "BN");
+      expect(sut2, "BN");
+      expect(sut3, "BN");
+      expect(sut4, "-");
+      expect(sut5, "-");
     },
   );
 }
