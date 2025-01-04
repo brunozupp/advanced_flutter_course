@@ -151,14 +151,26 @@ void main() {
       final sut1 = makeSut("Bruno Noveli ");
       final sut2 = makeSut(" Bruno Noveli");
       final sut3 = makeSut(" Bruno Noveli ");
-      final sut4 = makeSut(" ");
-      final sut5 = makeSut("      ");
+      final sut4 = makeSut("Bruno ");
+      final sut5 = makeSut(" Bruno");
+      final sut6 = makeSut(" Bruno ");
+      final sut7 = makeSut("B ");
+      final sut8 = makeSut(" B");
+      final sut9 = makeSut(" B ");
+      final sut10 = makeSut(" ");
+      final sut11 = makeSut("      ");
 
       expect(sut1, "BN");
       expect(sut2, "BN");
       expect(sut3, "BN");
-      expect(sut4, "-");
-      expect(sut5, "-");
+      expect(sut4, "BR");
+      expect(sut5, "BR");
+      expect(sut6, "BR");
+      expect(sut7, "B");
+      expect(sut8, "B");
+      expect(sut9, "B");
+      expect(sut10, "-");
+      expect(sut11, "-");
     },
   );
 }
