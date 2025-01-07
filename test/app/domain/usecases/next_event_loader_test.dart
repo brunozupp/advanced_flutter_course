@@ -42,24 +42,32 @@ abstract interface class ILoadNextEventRepository {
 
 void main() {
 
-  final groupId = Random().nextInt(3000).toString();
+  late final ILoadNextEventRepository repository;
+  late final NextEventLoader sut;
+
+  late final String groupId;
+
+  setUpAll(() {
+
+    groupId = Random().nextInt(3000).toString();
+
+    repository = LoadNextEventMockRepository();
+
+    sut = NextEventLoader(
+      loadNextEventRepository: repository,
+    );
+  });
 
   test(
     "Should load event data from a repository",
     () async {
 
-      final repo = LoadNextEventMockRepository();
-
-      final sut = NextEventLoader(
-        loadNextEventRepository: repo,
-      );
-
       await sut(
         groupId: groupId,
       );
 
-      expect(repo.groupId, groupId);
-      expect(repo.callsCount, 1);
+      expect((repository as LoadNextEventMockRepository).groupId, groupId);
+      expect((repository as LoadNextEventMockRepository).callsCount, 1);
     },
   );
 }
