@@ -33,7 +33,7 @@ class NextEventLoaderUseCase {
 /// When I test both input and output it's a spy;
 /// When I am worried only about the input it's a mock;
 /// When I am worried only about the output it's a stub;
-class LoadNextEventMockRepository implements ILoadNextEventRepository {
+class LoadNextEventSpyRepository implements ILoadNextEventRepository {
 
   /// These properties make sense just in this case, when I make a Mock
   /// There is no sense doing this in a real repository implementation.
@@ -69,7 +69,7 @@ void main() {
 
     groupId = Random().nextInt(3000).toString();
 
-    repository = LoadNextEventMockRepository()
+    repository = LoadNextEventSpyRepository()
       ..output = NextEvent(
         groupName: "any group name",
         date: DateTime.now(),
@@ -104,8 +104,8 @@ void main() {
         groupId: groupId,
       );
 
-      expect((repository as LoadNextEventMockRepository).groupId, groupId);
-      expect((repository as LoadNextEventMockRepository).callsCount, 1);
+      expect((repository as LoadNextEventSpyRepository).groupId, groupId);
+      expect((repository as LoadNextEventSpyRepository).callsCount, 1);
     },
   );
 
@@ -117,7 +117,7 @@ void main() {
         groupId: groupId,
       );
 
-      final repoParsed = (repository as LoadNextEventMockRepository);
+      final repoParsed = (repository as LoadNextEventSpyRepository);
 
       expect(event.groupName, repoParsed.output?.groupName);
       expect(event.date, repoParsed.output?.date);
