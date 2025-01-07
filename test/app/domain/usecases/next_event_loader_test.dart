@@ -1,33 +1,10 @@
 import 'dart:math';
 
+import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
+import 'package:advanced_flutter_course/app/domain/repositories/i_load_next_event_repository.dart';
+import 'package:advanced_flutter_course/app/domain/usecases/next_event_loader_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-class NextEvent {
-
-  final String groupName;
-  final DateTime date;
-  final List<NextEventPlayer> players;
-
-  NextEvent({
-    required this.groupName,
-    required this.date,
-    required this.players,
-  });
-}
-
-class NextEventLoaderUseCase {
-
-  final ILoadNextEventRepository _loadNextEventRepository;
-
-  NextEventLoaderUseCase({
-    required ILoadNextEventRepository loadNextEventRepository,
-  }) : _loadNextEventRepository = loadNextEventRepository;
-
-  Future<NextEvent> call({required String groupId}) async {
-    return await _loadNextEventRepository.loadNextEvent(groupId: groupId);
-  }
-}
 
 /// Mock, Spy, Stub
 /// When I test both input and output it's a spy;
@@ -55,11 +32,6 @@ class LoadNextEventSpyRepository implements ILoadNextEventRepository {
 
     return output!;
   }
-}
-
-abstract interface class ILoadNextEventRepository {
-
-  Future<NextEvent> loadNextEvent({required String groupId});
 }
 
 void main() {
