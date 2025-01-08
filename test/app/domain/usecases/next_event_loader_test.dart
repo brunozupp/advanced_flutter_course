@@ -1,10 +1,10 @@
-import 'dart:math';
-
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 import 'package:advanced_flutter_course/app/domain/repositories/i_load_next_event_repository.dart';
 import 'package:advanced_flutter_course/app/domain/usecases/next_event_loader_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../helpers/fakes.dart';
 
 /// Mock, Spy, Stub
 /// When I test both input and output it's a spy;
@@ -43,7 +43,7 @@ void main() {
 
   setUpAll(() {
 
-    groupId = Random().nextInt(3000).toString();
+    groupId = anyString();
 
     repository = LoadNextEventSpyRepository()
       ..output = NextEvent(
