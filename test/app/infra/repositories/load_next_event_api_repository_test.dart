@@ -12,16 +12,21 @@ import '../../../helpers/fakes.dart';
 class LoadNextEventApiRepository {
 
   final Client _httpClient;
+  final String _url;
 
   LoadNextEventApiRepository({
     required Client httpClient,
-  }) : _httpClient = httpClient;
+    required String url,
+  })  : _httpClient = httpClient,
+        _url = url;
 
   //@override
   //Future<NextEvent> loadNextEvent({required String groupId}) async {
   Future<void> loadNextEvent({required String groupId}) async {
 
-    await _httpClient.get(Uri());
+    final url = _url.replaceFirst(":groupId", groupId);
+
+    await _httpClient.get(Uri.parse(url));
   }
 
 }
@@ -30,6 +35,7 @@ class HttpClientSpy implements Client {
 
   String? method;
   int callsCount = 0;
+  String? url;
 
   @override
   void close() { }
@@ -43,6 +49,7 @@ class HttpClientSpy implements Client {
   Future<Response> get(Uri url, {Map<String, String>? headers}) async {
     method = "GET";
     callsCount++;
+    this.url = url.toString();
 
     return Response('', 200);
   }
@@ -86,22 +93,46 @@ class HttpClientSpy implements Client {
 
 void main() {
 
+  late final String groupId;
+  late final String url;
+
+  setUpAll(() {
+    groupId = anyString();
+    url = "https://domain.com/api/groups/:groupId/next_event";
+  });
+
   test(
     "Should request with correct method",
     () async {
-
-      final groupId = anyString();
 
       final httpClient = HttpClientSpy();
 
       final sut = LoadNextEventApiRepository(
         httpClient: httpClient,
+        url: url,
       );
 
       await sut.loadNextEvent(groupId: groupId);
 
       expect(httpClient.method, "GET");
       expect(httpClient.callsCount, 1);
+    },
+  );
+
+  test(
+    "Should request with correct url",
+    () async {
+
+      final httpClient = HttpClientSpy();
+
+      final sut = LoadNextEventApiRepository(
+        httpClient: httpClient,
+        url: url,
+      );
+
+      await sut.loadNextEvent(groupId: groupId);
+
+      expect(httpClient.url, "https://domain.com/api/groups/$groupId/next_event");
     },
   );
 }
