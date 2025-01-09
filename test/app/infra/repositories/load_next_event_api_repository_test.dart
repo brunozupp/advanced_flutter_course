@@ -95,22 +95,25 @@ void main() {
 
   late final String groupId;
   late final String url;
+  late final HttpClientSpy httpClient;
+  late final LoadNextEventApiRepository sut;
 
   setUpAll(() {
     groupId = anyString();
+
     url = "https://domain.com/api/groups/:groupId/next_event";
+
+    httpClient = HttpClientSpy();
+
+    sut = LoadNextEventApiRepository(
+      httpClient: httpClient,
+      url: url,
+    );
   });
 
   test(
     "Should request with correct method",
     () async {
-
-      final httpClient = HttpClientSpy();
-
-      final sut = LoadNextEventApiRepository(
-        httpClient: httpClient,
-        url: url,
-      );
 
       await sut.loadNextEvent(groupId: groupId);
 
@@ -122,13 +125,6 @@ void main() {
   test(
     "Should request with correct url",
     () async {
-
-      final httpClient = HttpClientSpy();
-
-      final sut = LoadNextEventApiRepository(
-        httpClient: httpClient,
-        url: url,
-      );
 
       await sut.loadNextEvent(groupId: groupId);
 
