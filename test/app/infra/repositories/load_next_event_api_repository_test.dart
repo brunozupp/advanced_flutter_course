@@ -26,7 +26,13 @@ class LoadNextEventApiRepository {
 
     final url = _url.replaceFirst(":groupId", groupId);
 
-    await _httpClient.get(Uri.parse(url));
+    await _httpClient.get(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "accept": "application/json",
+      }
+    );
   }
 
 }
@@ -36,6 +42,8 @@ class HttpClientSpy implements Client {
   String? method;
   int callsCount = 0;
   String? url;
+
+  Map<String,String>? headers;
 
   @override
   void close() { }
@@ -50,6 +58,7 @@ class HttpClientSpy implements Client {
     method = "GET";
     callsCount++;
     this.url = url.toString();
+    this.headers = headers;
 
     return Response('', 200);
   }
@@ -95,14 +104,16 @@ void main() {
 
   late final String groupId;
   late final String url;
-  late final HttpClientSpy httpClient;
-  late final LoadNextEventApiRepository sut;
+  late HttpClientSpy httpClient;
+  late LoadNextEventApiRepository sut;
 
   setUpAll(() {
     groupId = anyString();
 
     url = "https://domain.com/api/groups/:groupId/next_event";
+  });
 
+  setUp(() {
     httpClient = HttpClientSpy();
 
     sut = LoadNextEventApiRepository(
@@ -129,6 +140,17 @@ void main() {
       await sut.loadNextEvent(groupId: groupId);
 
       expect(httpClient.url, "https://domain.com/api/groups/$groupId/next_event");
+    },
+  );
+
+  test(
+    "Should request with correct headers",
+    () async {
+
+      await sut.loadNextEvent(groupId: groupId);
+
+      expect(httpClient.headers?["content-type"], "application/json");
+      expect(httpClient.headers?["accept"], "application/json");
     },
   );
 }
