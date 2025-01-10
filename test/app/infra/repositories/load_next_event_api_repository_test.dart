@@ -10,6 +10,10 @@ import 'package:http/http.dart';
 
 import '../../../helpers/fakes.dart';
 
+enum DomainError {
+  unexpected;
+}
+
 class LoadNextEventApiRepository implements ILoadNextEventRepository {
 
   final Client _httpClient;
@@ -33,6 +37,10 @@ class LoadNextEventApiRepository implements ILoadNextEventRepository {
         "accept": "application/json",
       }
     );
+
+    if(response.statusCode == 400) {
+      throw DomainError.unexpected;
+    }
 
     final eventMap = jsonDecode(response.body);
 
@@ -214,6 +222,22 @@ void main() {
       expect(event.players[1].position, "position 2");
       expect(event.players[1].photo, "photo 2");
       expect(event.players[1].confirmationDate, DateTime(2024,8,29,11,00));
+    },
+  );
+
+  /// UnexpectedError is a error from my Domain Layer. This is because
+  /// I don't want send an error from infra to my UI Layer, the user
+  /// doesn't care about the specific error that occurred.
+  test(
+    "Should throw UnexpectedError on 400",
+    () async {
+
+      /// Arrange
+      httpClient.statusCode = 400;
+
+      final future = sut.loadNextEvent(groupId: groupId);
+
+      expect(future, throwsA(DomainError.unexpected));
     },
   );
 }
