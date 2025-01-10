@@ -42,6 +42,7 @@ class LoadNextEventApiRepository implements ILoadNextEventRepository {
       case 400:
       case 403:
       case 404:
+      case 500:
         return throw DomainError.unexpected;
     }
 
@@ -263,6 +264,19 @@ void main() {
 
       /// Arrange
       httpClient.statusCode = 404;
+
+      final future = sut.loadNextEvent(groupId: groupId);
+
+      expect(future, throwsA(DomainError.unexpected));
+    },
+  );
+
+  test(
+    "Should throw UnexpectedError on 500",
+    () async {
+
+      /// Arrange
+      httpClient.statusCode = 500;
 
       final future = sut.loadNextEvent(groupId: groupId);
 
