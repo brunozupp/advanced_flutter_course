@@ -10,7 +10,7 @@ import 'package:http/http.dart';
 
 import '../../../helpers/fakes.dart';
 
-class LoadNextEventApiRepository {
+class LoadNextEventApiRepository implements ILoadNextEventRepository {
 
   final Client _httpClient;
   final String _url;
@@ -21,8 +21,7 @@ class LoadNextEventApiRepository {
   })  : _httpClient = httpClient,
         _url = url;
 
-  //@override
-  //Future<NextEvent> loadNextEvent({required String groupId}) async {
+  @override
   Future<NextEvent> loadNextEvent({required String groupId}) async {
 
     final url = _url.replaceFirst(":groupId", groupId);
