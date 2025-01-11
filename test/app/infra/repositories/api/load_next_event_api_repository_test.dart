@@ -2,6 +2,7 @@ import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 import 'package:advanced_flutter_course/app/domain/repositories/i_load_next_event_repository.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/clients/http_get_client.dart';
+import 'package:advanced_flutter_course/app/infra/repositories/api/mappers/next_event_mapper.dart';
 import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -32,37 +33,6 @@ class LoadNextEventApiRepository implements ILoadNextEventRepository {
     return NextEventMapper.toObject(event);
   }
 }
-
-final class NextEventMapper {
-
-  NextEventMapper._();
-
-  static NextEvent toObject(Json map) => NextEvent(
-    groupName: map["groupName"],
-    date: DateTime.parse(map["date"]),
-    players: NextEventPlayerMapper.toObjectList(map["players"])
-  );
-}
-
-final class NextEventPlayerMapper {
-
-  NextEventPlayerMapper._();
-
-  static NextEventPlayer toObject(Json map) => NextEventPlayer(
-    id: map["id"],
-    name: map["name"],
-    isConfirmed: map["isConfirmed"],
-    photo: map["photo"],
-    position: map["position"],
-    confirmationDate: DateTime.tryParse(map["confirmationDate"] ?? ""),
-  );
-
-  static List<NextEventPlayer> toObjectList(JsonList list) {
-    return list.map(toObject).toList();
-  }
-}
-
-
 
 class HttpGetClientSpy implements HttpGetClient {
 
