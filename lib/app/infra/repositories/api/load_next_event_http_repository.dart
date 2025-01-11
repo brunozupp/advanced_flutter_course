@@ -7,12 +7,12 @@ import '../../../domain/repositories/i_load_next_event_repository.dart';
 
 import 'package:http/http.dart';
 
-class LoadNextEventApiRepository implements ILoadNextEventRepository {
+class LoadNextEventHttpRepository implements ILoadNextEventRepository {
 
   final Client _httpClient;
   final String _url;
 
-  LoadNextEventApiRepository({
+  LoadNextEventHttpRepository({
     required Client httpClient,
     required String url,
   })  : _httpClient = httpClient,
