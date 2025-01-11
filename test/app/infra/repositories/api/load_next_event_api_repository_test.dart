@@ -27,18 +27,36 @@ class LoadNextEventApiRepository implements ILoadNextEventRepository {
       },
     );
 
-    return NextEvent(
-      groupName: event["groupName"],
-      date: DateTime.parse(event["date"]),
-      players: event["players"].map<NextEventPlayer>((player) => NextEventPlayer(
-        id: player["id"],
-        name: player["name"],
-        isConfirmed: player["isConfirmed"],
-        photo: player["photo"],
-        position: player["position"],
-        confirmationDate: DateTime.tryParse(player["confirmationDate"] ?? ""),
-      )).toList(),
-    );
+    return NextEventMapper.toObject(event);
+  }
+}
+
+final class NextEventMapper {
+
+  NextEventMapper._();
+
+  static NextEvent toObject(Map<String, dynamic> map) => NextEvent(
+    groupName: map["groupName"],
+    date: DateTime.parse(map["date"]),
+    players: NextEventPlayerMapper.toObjectList(map["players"])
+  );
+}
+
+final class NextEventPlayerMapper {
+
+  NextEventPlayerMapper._();
+
+  static NextEventPlayer toObject(Map<String, dynamic> map) => NextEventPlayer(
+    id: map["id"],
+    name: map["name"],
+    isConfirmed: map["isConfirmed"],
+    photo: map["photo"],
+    position: map["position"],
+    confirmationDate: DateTime.tryParse(map["confirmationDate"] ?? ""),
+  );
+
+  static List<NextEventPlayer> toObjectList(List<Map<String, dynamic>> list) {
+    return list.map(toObject).toList();
   }
 }
 
