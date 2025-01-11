@@ -1,38 +1,9 @@
-import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
-import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
-import 'package:advanced_flutter_course/app/domain/repositories/i_load_next_event_repository.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/clients/http_get_client.dart';
-import 'package:advanced_flutter_course/app/infra/repositories/api/mappers/next_event_mapper.dart';
+import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_event_api_repository.dart';
 import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/fakes.dart';
-
-class LoadNextEventApiRepository implements ILoadNextEventRepository {
-
-  final HttpGetClient _httpClient;
-  final String _url;
-
-  LoadNextEventApiRepository({
-    required HttpGetClient httpClient,
-    required String url,
-  })  : _httpClient = httpClient,
-        _url = url;
-
-  @override
-  Future<NextEvent> loadNextEvent({
-    required String groupId,
-  }) async {
-    final event = await _httpClient.get<Json>(
-      url: _url,
-      params: {
-        "groupId": groupId,
-      },
-    );
-
-    return NextEventMapper.toObject(event);
-  }
-}
 
 class HttpGetClientSpy implements HttpGetClient {
 
