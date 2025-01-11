@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import '../domain/entities/enums/domain_error.dart';
-import '../domain/entities/next_event.dart';
-import '../domain/entities/next_event_player.dart';
-import '../domain/repositories/i_load_next_event_repository.dart';
+import '../../../domain/entities/enums/domain_error.dart';
+import '../../../domain/entities/next_event.dart';
+import '../../../domain/entities/next_event_player.dart';
+import '../../../domain/repositories/i_load_next_event_repository.dart';
 
 import 'package:http/http.dart';
 

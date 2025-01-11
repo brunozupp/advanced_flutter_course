@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:advanced_flutter_course/app/domain/entities/enums/domain_error.dart';
-import 'package:advanced_flutter_course/app/infra/load_next_event_api_repository.dart';
+import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_event_api_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 
