@@ -5,6 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/fakes.dart';
 
+typedef Json = Map<String,dynamic>;
+typedef JsonList = List<Json>;
+
 class LoadNextEventApiRepository implements ILoadNextEventRepository {
 
   final HttpGetClient _httpClient;
@@ -20,7 +23,7 @@ class LoadNextEventApiRepository implements ILoadNextEventRepository {
   Future<NextEvent> loadNextEvent({
     required String groupId,
   }) async {
-    final event = await _httpClient.get<Map<String,dynamic>>(
+    final event = await _httpClient.get<Json>(
       url: _url,
       params: {
         "groupId": groupId,
@@ -35,7 +38,7 @@ final class NextEventMapper {
 
   NextEventMapper._();
 
-  static NextEvent toObject(Map<String, dynamic> map) => NextEvent(
+  static NextEvent toObject(Json map) => NextEvent(
     groupName: map["groupName"],
     date: DateTime.parse(map["date"]),
     players: NextEventPlayerMapper.toObjectList(map["players"])
@@ -46,7 +49,7 @@ final class NextEventPlayerMapper {
 
   NextEventPlayerMapper._();
 
-  static NextEventPlayer toObject(Map<String, dynamic> map) => NextEventPlayer(
+  static NextEventPlayer toObject(Json map) => NextEventPlayer(
     id: map["id"],
     name: map["name"],
     isConfirmed: map["isConfirmed"],
@@ -55,7 +58,7 @@ final class NextEventPlayerMapper {
     confirmationDate: DateTime.tryParse(map["confirmationDate"] ?? ""),
   );
 
-  static List<NextEventPlayer> toObjectList(List<Map<String, dynamic>> list) {
+  static List<NextEventPlayer> toObjectList(JsonList list) {
     return list.map(toObject).toList();
   }
 }
