@@ -85,6 +85,23 @@ void main() {
           expect(client.headers?["accept"], "application/json");
         },
       );
+
+      test(
+        "Should append headers",
+        () async {
+
+          await sut.get(
+            url: url,
+            headers: {
+              "custom-header-one": "value-custom-header-one",
+              "custom-header-two": "value-custom-header-two",
+            }
+          );
+
+          expect(client.headers?["custom-header-one"], "value-custom-header-one");
+          expect(client.headers?["custom-header-two"], "value-custom-header-two");
+        },
+      );
     },
   );
 
