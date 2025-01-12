@@ -5,13 +5,13 @@ import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_eve
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/fakes.dart';
-import 'clients/http_client_spy.dart';
+import 'clients/client_spy.dart';
 
 void main() {
 
   late final String groupId;
   late final String url;
-  late HttpClientSpy httpClient;
+  late ClientSpy httpClient;
   late LoadNextEventHttpRepository sut;
 
   setUpAll(() {
@@ -21,7 +21,7 @@ void main() {
   });
 
   setUp(() {
-    httpClient = HttpClientSpy();
+    httpClient = ClientSpy();
 
     httpClient.responseJson = jsonEncode(mapNextEvent);
 
