@@ -214,6 +214,28 @@ void main() {
           expect(client.url, "$url?q1=v1&q2=v2");
         },
       );
+
+      test(
+        "Should request with correct query string and params",
+        () async {
+
+          url = "http://anyurl.com/:p3/:p4";
+
+          await sut.get(
+            url: url,
+            queryString: {
+              "q1": "v1",
+              "q2": "v2",
+            },
+            params: {
+              "p3": "v3",
+              "p4": "v4",
+            },
+          );
+
+          expect(client.url, "http://anyurl.com/v3/v4?q1=v1&q2=v2");
+        },
+      );
     },
   );
 
