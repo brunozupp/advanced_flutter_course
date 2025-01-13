@@ -275,6 +275,19 @@ void main() {
           expect(future, throwsA(DomainError.unexpected));
         },
       );
+
+      test(
+        "Should throw UnexpectedError on 401",
+        () async {
+
+          client.statusCode = 401;
+
+          final future = sut.get(url: url);
+
+          expect(future, throwsA(DomainError.sessionExpired));
+        },
+      );
+
     },
   );
 
