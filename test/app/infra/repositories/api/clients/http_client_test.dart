@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 
@@ -43,29 +44,44 @@ class HttpClient {
 
     var urlToFormat = url;
 
-    params?.forEach((key, value) {
+    urlToFormat = params?.keys
+      .fold(
+        urlToFormat,
+        (result, key) =>
+            result.replaceFirst(":$key", params[key] ?? ""))
+      .removeSuffix("/") ??
+    urlToFormat;
 
-      if(value == null) {
-        urlToFormat = urlToFormat.replaceFirst("/:$key", "");
-      } else {
-        urlToFormat = urlToFormat.replaceFirst(":$key", value);
-      }
-    });
+    urlToFormat = queryString?.keys
+      .fold(
+        "$urlToFormat?",
+        (result, key) => "$result$key=${queryString[key]}&")
+      .removeSuffix("&") ??
+    urlToFormat;
 
-    final queryStringList = queryString?.entries.toList() ?? [];
+    // params?.forEach((key, value) {
 
-    for (var i = 0; i < queryStringList.length; i++) {
+    //   if(value == null) {
+    //     urlToFormat = urlToFormat.replaceFirst("/:$key", "");
+    //   } else {
+    //     urlToFormat = urlToFormat.replaceFirst(":$key", value);
+    //   }
+    // });
 
-      if(i == 0) {
-        urlToFormat += "?";
-      }
+    // final queryStringList = queryString?.entries.toList() ?? [];
 
-      urlToFormat += "${queryStringList[i].key}=${queryStringList[i].value}";
+    // for (var i = 0; i < queryStringList.length; i++) {
 
-      if(i < queryStringList.length - 1) {
-        urlToFormat += "&";
-      }
-    }
+    //   if(i == 0) {
+    //     urlToFormat += "?";
+    //   }
+
+    //   urlToFormat += "${queryStringList[i].key}=${queryStringList[i].value}";
+
+    //   if(i < queryStringList.length - 1) {
+    //     urlToFormat += "&";
+    //   }
+    // }
 
     return Uri.parse(urlToFormat);
   }
