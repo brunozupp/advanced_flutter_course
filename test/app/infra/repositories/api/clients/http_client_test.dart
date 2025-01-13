@@ -1,3 +1,4 @@
+import 'package:advanced_flutter_course/app/domain/entities/enums/domain_error.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
@@ -26,7 +27,7 @@ class HttpClient {
       queryString: queryString,
     );
 
-    await _client.get(
+    final response = await _client.get(
       uri,
       headers: {
         "content-type": "application/json",
@@ -34,6 +35,16 @@ class HttpClient {
         if(headers != null) ...headers,
       },
     );
+
+    switch(response.statusCode) {
+      case 400:
+      case 403:
+      case 404:
+      case 500:
+        throw DomainError.unexpected;
+      case 401:
+        throw DomainError.sessionExpired;
+    }
   }
 
   Uri _buildUrl({
@@ -252,8 +263,19 @@ void main() {
           expect(client.url, "http://anyurl.com/v3/v4?q1=v1&q2=v2");
         },
       );
+
+      test(
+        "Should throw UnexpectedError on 400",
+        () async {
+
+          client.statusCode = 400;
+
+          final future = sut.get(url: url);
+
+          expect(future, throwsA(DomainError.unexpected));
+        },
+      );
     },
   );
-
 
 }
