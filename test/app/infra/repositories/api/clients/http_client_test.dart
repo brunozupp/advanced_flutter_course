@@ -16,11 +16,13 @@ class HttpClient {
     required String url,
     Map<String, String>? headers,
     Map<String, String?>? params,
+    Map<String, String>? queryString,
   }) async {
 
     final uri = _buildUrl(
       url: url,
       params: params,
+      queryString: queryString,
     );
 
     await _client.get(
@@ -36,6 +38,7 @@ class HttpClient {
   Uri _buildUrl({
     required String url,
     Map<String, String?>? params,
+    Map<String, String>? queryString,
   }) {
 
     var urlToFormat = url;
@@ -48,6 +51,21 @@ class HttpClient {
         urlToFormat = urlToFormat.replaceFirst(":$key", value);
       }
     });
+
+    final queryStringList = queryString?.entries.toList() ?? [];
+
+    for (var i = 0; i < queryStringList.length; i++) {
+
+      if(i == 0) {
+        urlToFormat += "?";
+      }
+
+      urlToFormat += "${queryStringList[i].key}=${queryStringList[i].value}";
+
+      if(i < queryStringList.length - 1) {
+        urlToFormat += "&";
+      }
+    }
 
     return Uri.parse(urlToFormat);
   }
@@ -178,6 +196,22 @@ void main() {
           );
 
           expect(client.url, "http://anyurl.com/:p1/:p2");
+        },
+      );
+
+      test(
+        "Should request with correct query string",
+        () async {
+
+          await sut.get(
+            url: url,
+            queryString: {
+              "q1": "v1",
+              "q2": "v2",
+            },
+          );
+
+          expect(client.url, "$url?q1=v1&q2=v2");
         },
       );
     },
