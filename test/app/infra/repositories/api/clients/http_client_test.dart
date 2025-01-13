@@ -288,6 +288,30 @@ void main() {
         },
       );
 
+      test(
+        "Should throw UnexpectedError on 403",
+        () async {
+
+          client.statusCode = 403;
+
+          final future = sut.get(url: url);
+
+          expect(future, throwsA(DomainError.unexpected));
+        },
+      );
+
+      test(
+        "Should throw UnexpectedError on 404",
+        () async {
+
+          client.statusCode = 404;
+
+          final future = sut.get(url: url);
+
+          expect(future, throwsA(DomainError.unexpected));
+        },
+      );
+
     },
   );
 
