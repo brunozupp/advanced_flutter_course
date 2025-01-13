@@ -15,7 +15,7 @@ class HttpClient {
   Future<void> get({
     required String url,
     Map<String, String>? headers,
-    Map<String, String>? params,
+    Map<String, String?>? params,
   }) async {
 
     final uri = _buildUrl(
@@ -35,13 +35,18 @@ class HttpClient {
 
   Uri _buildUrl({
     required String url,
-    Map<String, String>? params,
+    Map<String, String?>? params,
   }) {
 
     var urlToFormat = url;
 
     params?.forEach((key, value) {
-      urlToFormat = urlToFormat.replaceFirst(":$key", value);
+
+      if(value == null) {
+        urlToFormat = urlToFormat.replaceFirst("/:$key", "");
+      } else {
+        urlToFormat = urlToFormat.replaceFirst(":$key", value);
+      }
     });
 
     return Uri.parse(urlToFormat);
@@ -138,6 +143,24 @@ void main() {
           );
 
           expect(client.url, "http://anyurl.com/v1/v2");
+        },
+      );
+
+      test(
+        "Should request with optional params",
+        () async {
+
+          url = "http://anyurl.com/:p1/:p2";
+
+          await sut.get(
+            url: url,
+            params: {
+              "p1": "v1",
+              "p2": null,
+            },
+          );
+
+          expect(client.url, "http://anyurl.com/v1");
         },
       );
     },
