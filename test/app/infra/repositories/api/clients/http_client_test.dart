@@ -17,7 +17,7 @@ class HttpClient {
     required Client client,
   }) : _client = client;
 
-  Future<T> get<T>({
+  Future<T?> get<T>({
     required String url,
     Map<String, String>? headers,
     Map<String, String?>? params,
@@ -47,6 +47,10 @@ class HttpClient {
         throw DomainError.unexpected;
       case 401:
         throw DomainError.sessionExpired;
+    }
+
+    if(response.body.isEmpty) {
+      return null;
     }
 
     final responseDecode = jsonDecode(response.body);
@@ -347,8 +351,8 @@ void main() {
 
           final data = await sut.get<Json>(url: url);
 
-          expect(data["key1"], "value1");
-          expect(data["key2"], "value2");
+          expect(data?["key1"], "value1");
+          expect(data?["key2"], "value2");
         },
       );
 
@@ -363,8 +367,8 @@ void main() {
 
           final data = await sut.get<Json>(url: url);
 
-          expect(data["key1"], "value1");
-          expect(data["key2"], "value2");
+          expect(data?["key1"], "value1");
+          expect(data?["key2"], "value2");
         },
       );
 
@@ -385,11 +389,11 @@ void main() {
 
           final data = await sut.get<JsonList>(url: url);
 
-          expect(data[0]["key1"], "value1.1");
-          expect(data[0]["key2"], "value2.1");
+          expect(data?[0]["key1"], "value1.1");
+          expect(data?[0]["key2"], "value2.1");
 
-          expect(data[1]["key1"], "value1.2");
-          expect(data[1]["key2"], "value2.2");
+          expect(data?[1]["key1"], "value1.2");
+          expect(data?[1]["key2"], "value2.2");
         },
       );
 
@@ -415,6 +419,19 @@ void main() {
 
           expect(data[1]["key1"], "value1.2");
           expect(data[1]["key2"], "value2.2");
+        },
+      );
+
+      test(
+        "Should return null on 200 with empty response",
+        () async {
+
+          client.responseJson = "";
+          client.statusCode = 200;
+
+          final data = await sut.get(url: url);
+
+          expect(data, isNull);
         },
       );
 
