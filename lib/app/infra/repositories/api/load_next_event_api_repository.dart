@@ -26,6 +26,6 @@ class LoadNextEventApiRepository implements ILoadNextEventRepository {
       },
     );
 
-    return NextEventMapper.toObject(event);
+    return NextEventMapper.toObject(event!);
   }
 }
