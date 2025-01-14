@@ -1,3 +1,5 @@
+import 'package:advanced_flutter_course/app/domain/entities/enums/domain_error.dart';
+
 import '../../../domain/entities/next_event.dart';
 import '../../../domain/repositories/i_load_next_event_repository.dart';
 import '../../types/json_type.dart';
@@ -26,6 +28,10 @@ class LoadNextEventApiRepository implements ILoadNextEventRepository {
       },
     );
 
-    return NextEventMapper.toObject(event!);
+    if(event == null) {
+      throw DomainError.unexpected;
+    }
+
+    return NextEventMapper.toObject(event);
   }
 }

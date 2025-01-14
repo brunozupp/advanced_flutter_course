@@ -1,3 +1,4 @@
+import 'package:advanced_flutter_course/app/domain/entities/enums/domain_error.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_event_api_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -71,6 +72,18 @@ void main() {
       final future = sut.loadNextEvent(groupId: groupId);
 
       expect(future, throwsA(error));
+    },
+  );
+
+  test(
+    "Should throw UnexpectedError on null response",
+    () async {
+
+      httpClient.response = null;
+
+      final future = sut.loadNextEvent(groupId: groupId);
+
+      expect(future, throwsA(DomainError.unexpected));
     },
   );
 }
