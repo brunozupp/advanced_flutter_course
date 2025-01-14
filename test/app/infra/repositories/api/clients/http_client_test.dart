@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:advanced_flutter_course/app/domain/entities/enums/domain_error.dart';
+import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
@@ -48,7 +49,13 @@ class HttpClient {
         throw DomainError.sessionExpired;
     }
 
-    return jsonDecode(response.body);
+    final responseDecode = jsonDecode(response.body);
+
+    if(T == JsonList) {
+      return responseDecode.map<Json>((e) => e as Json).toList();
+    }
+
+    return responseDecode;
   }
 
   Uri _buildUrl({
@@ -111,6 +118,7 @@ void main() {
   setUp(() {
 
     client = ClientSpy();
+    client.responseJson = jsonEncode(mapNextEvent);
 
     sut = HttpClient(
       client: client,
@@ -329,7 +337,7 @@ void main() {
       );
 
       test(
-        "Should return a Map",
+        "Should return a Map (typed)",
         () async {
 
           client.responseJson = jsonEncode({
@@ -337,10 +345,76 @@ void main() {
             "key2": "value2",
           });
 
-          final data = await sut.get(url: url);
+          final data = await sut.get<Json>(url: url);
 
           expect(data["key1"], "value1");
           expect(data["key2"], "value2");
+        },
+      );
+
+      test(
+        "Should return a Map (not typed)",
+        () async {
+
+          client.responseJson = jsonEncode({
+            "key1": "value1",
+            "key2": "value2",
+          });
+
+          final data = await sut.get<Json>(url: url);
+
+          expect(data["key1"], "value1");
+          expect(data["key2"], "value2");
+        },
+      );
+
+      test(
+        "Should return a List of Maps (typed)",
+        () async {
+
+          client.responseJson = jsonEncode([
+            {
+              "key1": "value1.1",
+              "key2": "value2.1",
+            },
+            {
+              "key1": "value1.2",
+              "key2": "value2.2",
+            },
+          ]);
+
+          final data = await sut.get<JsonList>(url: url);
+
+          expect(data[0]["key1"], "value1.1");
+          expect(data[0]["key2"], "value2.1");
+
+          expect(data[1]["key1"], "value1.2");
+          expect(data[1]["key2"], "value2.2");
+        },
+      );
+
+      test(
+        "Should return a List of Maps (not typed)",
+        () async {
+
+          client.responseJson = jsonEncode([
+            {
+              "key1": "value1.1",
+              "key2": "value2.1",
+            },
+            {
+              "key1": "value1.2",
+              "key2": "value2.2",
+            },
+          ]);
+
+          final data = await sut.get(url: url);
+
+          expect(data[0]["key1"], "value1.1");
+          expect(data[0]["key2"], "value2.1");
+
+          expect(data[1]["key1"], "value1.2");
+          expect(data[1]["key2"], "value2.2");
         },
       );
 
