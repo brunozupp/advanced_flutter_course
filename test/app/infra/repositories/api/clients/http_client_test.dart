@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:advanced_flutter_course/app/domain/entities/enums/domain_error.dart';
 import 'package:dartx/dartx.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,7 +16,7 @@ class HttpClient {
     required Client client,
   }) : _client = client;
 
-  Future<void> get({
+  Future<T> get<T>({
     required String url,
     Map<String, String>? headers,
     Map<String, String?>? params,
@@ -45,6 +47,8 @@ class HttpClient {
       case 401:
         throw DomainError.sessionExpired;
     }
+
+    return jsonDecode(response.body);
   }
 
   Uri _buildUrl({
@@ -321,6 +325,22 @@ void main() {
           final future = sut.get(url: url);
 
           expect(future, throwsA(DomainError.unexpected));
+        },
+      );
+
+      test(
+        "Should return a Map",
+        () async {
+
+          client.responseJson = jsonEncode({
+            "key1": "value1",
+            "key2": "value2",
+          });
+
+          final data = await sut.get(url: url);
+
+          expect(data["key1"], "value1");
+          expect(data["key2"], "value2");
         },
       );
 
