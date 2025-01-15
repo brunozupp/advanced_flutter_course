@@ -7,11 +7,11 @@ import 'package:http/http.dart';
 import '../../../../domain/entities/enums/domain_error.dart';
 import '../../../types/json_type.dart';
 
-class HttpAdapter implements HttpGetClient {
+final class HttpAdapter implements HttpGetClient {
 
   final Client _client;
 
-  HttpAdapter({
+  const HttpAdapter({
     required Client client,
   }) : _client = client;
 
