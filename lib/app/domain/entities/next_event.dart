@@ -1,12 +1,12 @@
 import 'next_event_player.dart';
 
-class NextEvent {
+final class NextEvent {
 
   final String groupName;
   final DateTime date;
   final List<NextEventPlayer> players;
 
-  NextEvent({
+  const NextEvent({
     required this.groupName,
     required this.date,
     required this.players,

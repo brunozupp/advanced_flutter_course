@@ -1,4 +1,4 @@
-class NextEventPlayer {
+final class NextEventPlayer {
   final String id;
   final String name;
   final String? photo;
@@ -6,7 +6,7 @@ class NextEventPlayer {
   final bool isConfirmed;
   final DateTime? confirmationDate;
 
-  NextEventPlayer({
+  const NextEventPlayer({
     required this.id,
     required this.name,
     this.photo,
