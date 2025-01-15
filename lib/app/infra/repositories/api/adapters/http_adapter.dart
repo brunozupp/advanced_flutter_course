@@ -31,12 +31,21 @@ class HttpAdapter implements HttpGetClient {
 
     final response = await _client.get(
       uri,
-      headers: {
-        "content-type": "application/json",
-        "accept": "application/json",
-        if(headers != null) ...headers,
-      },
+      headers: _buildHeaders(headers),
     );
+
+    return _handleResponse(response);
+  }
+
+  Map<String,String> _buildHeaders([Map<String, String>? headers]) {
+    return {
+      "content-type": "application/json",
+      "accept": "application/json",
+      if(headers != null) ...headers,
+    };
+  }
+
+  T? _handleResponse<T>(Response response) {
 
     switch(response.statusCode) {
       /// I don't need this line of code because I already treat
@@ -57,6 +66,7 @@ class HttpAdapter implements HttpGetClient {
     }
 
     /// To the cases where response from 200 is null
+    /// But can be used to cases when the status is 204 (No Content)
     if(response.body.isEmpty) {
       return null;
     }
