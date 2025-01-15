@@ -6,7 +6,7 @@ import '../../types/json_type.dart';
 import 'clients/http_get_client.dart';
 import 'mappers/next_event_mapper.dart';
 
-class LoadNextEventApiRepository implements ILoadNextEventRepository {
+final class LoadNextEventApiRepository implements ILoadNextEventRepository {
 
   final HttpGetClient _httpClient;
   final String _url;

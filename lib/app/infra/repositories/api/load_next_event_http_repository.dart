@@ -7,6 +7,9 @@ import '../../../domain/repositories/i_load_next_event_repository.dart';
 
 import 'package:http/http.dart';
 
+/// This repository was created to show the bad ways to do things where
+/// I basically have everything inside this repository. It does more than
+/// one job.
 class LoadNextEventHttpRepository implements ILoadNextEventRepository {
 
   final Client _httpClient;
