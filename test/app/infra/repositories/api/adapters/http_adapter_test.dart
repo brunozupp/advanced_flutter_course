@@ -150,10 +150,11 @@ void main() {
             queryString: {
               "q1": "v1",
               "q2": "v2",
+              "q3": 3,
             },
           );
 
-          expect(client.url, "$url?q1=v1&q2=v2");
+          expect(client.url, "$url?q1=v1&q2=v2&q3=3");
         },
       );
 

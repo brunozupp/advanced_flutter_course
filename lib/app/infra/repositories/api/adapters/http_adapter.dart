@@ -20,7 +20,7 @@ final class HttpAdapter implements HttpGetClient {
     required String url,
     Json? headers,
     Json? params,
-    Map<String, String>? queryString,
+    Json? queryString,
   }) async {
 
     final uri = _buildUrl(
@@ -92,7 +92,7 @@ final class HttpAdapter implements HttpGetClient {
   Uri _buildUrl({
     required String url,
     Json? params,
-    Map<String, String>? queryString,
+    Json? queryString,
   }) {
 
     var urlToFormat = url;
