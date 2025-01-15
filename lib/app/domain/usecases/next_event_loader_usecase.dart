@@ -1,11 +1,11 @@
 import '../entities/next_event.dart';
 import '../repositories/i_load_next_event_repository.dart';
 
-class NextEventLoaderUseCase {
+final class NextEventLoaderUseCase {
 
   final ILoadNextEventRepository _loadNextEventRepository;
 
-  NextEventLoaderUseCase({
+  const NextEventLoaderUseCase({
     required ILoadNextEventRepository loadNextEventRepository,
   }) : _loadNextEventRepository = loadNextEventRepository;
 
