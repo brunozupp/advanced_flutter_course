@@ -4,7 +4,7 @@ import 'package:advanced_flutter_course/app/infra/repositories/api/clients/http_
 import 'package:dartx/dartx.dart';
 import 'package:http/http.dart';
 
-import '../../../../domain/entities/enums/domain_error.dart';
+import '../../../../domain/entities/domain_error.dart';
 import '../../../types/json_type.dart';
 
 final class HttpAdapter implements HttpGetClient {
@@ -60,9 +60,9 @@ final class HttpAdapter implements HttpGetClient {
       case 403:
       case 404:
       case 500:
-        throw DomainError.unexpected;
+        throw UnexpectedError();
       case 401:
-        throw DomainError.sessionExpired;
+        throw SessionExpiredError();
     }
 
     /// To the cases where response from 200 is null

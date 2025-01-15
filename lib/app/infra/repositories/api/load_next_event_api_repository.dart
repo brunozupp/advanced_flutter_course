@@ -1,4 +1,4 @@
-import 'package:advanced_flutter_course/app/domain/entities/enums/domain_error.dart';
+import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 
 import '../../../domain/entities/next_event.dart';
 import '../../../domain/repositories/i_load_next_event_repository.dart';
@@ -29,7 +29,7 @@ final class LoadNextEventApiRepository implements ILoadNextEventRepository {
     );
 
     if(event == null) {
-      throw DomainError.unexpected;
+      throw UnexpectedError();
     }
 
     return NextEventMapper.toObject(event);

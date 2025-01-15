@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../../../domain/entities/enums/domain_error.dart';
+import '../../../domain/entities/domain_error.dart';
 import '../../../domain/entities/next_event.dart';
 import '../../../domain/entities/next_event_player.dart';
 import '../../../domain/repositories/i_load_next_event_repository.dart';
@@ -39,9 +39,9 @@ class LoadNextEventHttpRepository implements ILoadNextEventRepository {
       case 403:
       case 404:
       case 500:
-        throw DomainError.unexpected;
+        throw UnexpectedError();
       case 401:
-        throw DomainError.sessionExpired;
+        throw SessionExpiredError();
     }
 
     final eventMap = jsonDecode(response.body);

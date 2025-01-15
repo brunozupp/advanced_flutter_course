@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:advanced_flutter_course/app/domain/entities/enums/domain_error.dart';
+import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/adapters/http_adapter.dart';
 import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -184,7 +184,7 @@ void main() {
 
           final future = sut.get(url: url);
 
-          expect(future, throwsA(DomainError.unexpected));
+          expect(future, throwsA(isA<UnexpectedError>()));
         },
       );
 
@@ -196,7 +196,7 @@ void main() {
 
           final future = sut.get(url: url);
 
-          expect(future, throwsA(DomainError.sessionExpired));
+          expect(future, throwsA(isA<SessionExpiredError>()));
         },
       );
 
@@ -208,7 +208,7 @@ void main() {
 
           final future = sut.get(url: url);
 
-          expect(future, throwsA(DomainError.unexpected));
+          expect(future, throwsA(isA<UnexpectedError>()));
         },
       );
 
@@ -220,7 +220,7 @@ void main() {
 
           final future = sut.get(url: url);
 
-          expect(future, throwsA(DomainError.unexpected));
+          expect(future, throwsA(isA<UnexpectedError>()));
         },
       );
 
@@ -232,7 +232,7 @@ void main() {
 
           final future = sut.get(url: url);
 
-          expect(future, throwsA(DomainError.unexpected));
+          expect(future, throwsA(isA<UnexpectedError>()));
         },
       );
 
