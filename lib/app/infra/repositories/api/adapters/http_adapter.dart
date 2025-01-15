@@ -19,7 +19,7 @@ final class HttpAdapter implements HttpGetClient {
   Future<T?> get<T>({
     required String url,
     Json? headers,
-    Map<String, String?>? params,
+    Json? params,
     Map<String, String>? queryString,
   }) async {
 
@@ -91,7 +91,7 @@ final class HttpAdapter implements HttpGetClient {
 
   Uri _buildUrl({
     required String url,
-    Map<String, String?>? params,
+    Json? params,
     Map<String, String>? queryString,
   }) {
 
@@ -101,7 +101,7 @@ final class HttpAdapter implements HttpGetClient {
       .fold(
         urlToFormat,
         (result, key) =>
-            result.replaceFirst(":$key", params[key] ?? ""))
+            result.replaceFirst(":$key", params[key]?.toString() ?? ""))
       .removeSuffix("/") ??
     urlToFormat;
 

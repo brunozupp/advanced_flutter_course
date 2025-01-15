@@ -91,17 +91,18 @@ void main() {
         "Should request with correct params",
         () async {
 
-          url = "http://anyurl.com/:p1/:p2";
+          url = "http://anyurl.com/:p1/:p2/:p3";
 
           await sut.get(
             url: url,
             params: {
               "p1": "v1",
               "p2": "v2",
+              "p3": 3,
             },
           );
 
-          expect(client.url, "http://anyurl.com/v1/v2");
+          expect(client.url, "http://anyurl.com/v1/v2/3");
         },
       );
 
