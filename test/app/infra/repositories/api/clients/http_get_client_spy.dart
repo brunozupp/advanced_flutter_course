@@ -1,21 +1,22 @@
 import 'package:advanced_flutter_course/app/infra/repositories/api/clients/http_get_client.dart';
+import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 
 final class HttpGetClientSpy implements HttpGetClient {
 
   String? url;
   int callsCount = 0;
-  Map<String, String?>? params;
-  Map<String, String>? queryString;
-  Map<String, String>? headers;
+  Json? params;
+  Json? queryString;
+  Json? headers;
   dynamic response;
   Error? error;
 
   @override
   Future<T?> get<T>({
     required String url,
-    Map<String, String>? headers,
-    Map<String, String?>? params,
-    Map<String, String>? queryString,
+    Json? headers,
+    Json? params,
+    Json? queryString,
   }) async {
     this.url = url;
     callsCount++;
