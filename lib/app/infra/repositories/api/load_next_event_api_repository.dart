@@ -32,6 +32,6 @@ final class LoadNextEventApiRepository implements ILoadNextEventRepository {
       throw UnexpectedError();
     }
 
-    return NextEventMapper.toObject(event);
+    return NextEventMapper().toObject(event);
   }
 }

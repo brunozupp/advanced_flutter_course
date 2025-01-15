@@ -1,20 +1,16 @@
 import '../../../../domain/entities/next_event_player.dart';
 import '../../../types/json_type.dart';
+import 'mapper.dart';
 
-final class NextEventPlayerMapper {
+final class NextEventPlayerMapper extends Mapper<NextEventPlayer> {
 
-  NextEventPlayerMapper._();
-
-  static NextEventPlayer toObject(Json map) => NextEventPlayer(
-    id: map["id"],
-    name: map["name"],
-    isConfirmed: map["isConfirmed"],
-    photo: map["photo"],
-    position: map["position"],
-    confirmationDate: DateTime.tryParse(map["confirmationDate"] ?? ""),
+  @override
+  NextEventPlayer toObject(Json json) => NextEventPlayer(
+    id: json["id"],
+    name: json["name"],
+    isConfirmed: json["isConfirmed"],
+    photo: json["photo"],
+    position: json["position"],
+    confirmationDate: DateTime.tryParse(json["confirmationDate"] ?? ""),
   );
-
-  static List<NextEventPlayer> toObjectList(JsonList list) {
-    return list.map(toObject).toList();
-  }
 }
