@@ -11,7 +11,7 @@ final class LoadNextEventApiRepository implements ILoadNextEventRepository {
   final HttpGetClient _httpClient;
   final String _url;
 
-  LoadNextEventApiRepository({
+  const LoadNextEventApiRepository({
     required HttpGetClient httpClient,
     required String url,
   })  : _httpClient = httpClient,
