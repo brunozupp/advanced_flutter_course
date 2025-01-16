@@ -64,14 +64,40 @@ class _NextEventPageState extends State<NextEventPage> {
 
           return ListView(
             children: [
-              const Text("DENTRO - GOLEIROS"),
-              Text(nextEvent.goalKeepers.length.toString()),
-
-              ...nextEvent.goalKeepers.map((goalKeeper) => Text(goalKeeper.name))
+              Visibility(
+                visible: nextEvent.goalKeepers.isNotEmpty,
+                child: ListSection(
+                  title: "DENTRO - GOLEIROS",
+                  players: nextEvent.goalKeepers,
+                )
+              ),
             ],
           );
         },
       ),
+    );
+  }
+}
+
+class ListSection extends StatelessWidget {
+
+  final String title;
+  final List<NextEventPlayerViewModel> players;
+
+  const ListSection({
+    super.key,
+    required this.title,
+    required this.players,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(title),
+        Text(players.length.toString()),
+        ...players.map((goalKeeper) => Text(goalKeeper.name))
+      ],
     );
   }
 }
@@ -219,6 +245,20 @@ void main() {
       expect(find.text("Rodrigo"), findsOneWidget);
       expect(find.text("Rafael"), findsOneWidget);
       expect(find.text("Pedro"), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Should hide all sections",
+    (WidgetTester tester) async {
+
+      await tester.pumpWidget(sut);
+
+      presenter.emitNextEvent();
+
+      await tester.pump();
+
+      expect(find.text("DENTRO - GOLEIROS"), findsNothing);
     },
   );
 }
