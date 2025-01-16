@@ -57,26 +57,31 @@ final class NextEventPresenterSpy implements NextEventPresenter {
 
 void main() {
 
+  late NextEventPresenterSpy presenter;
+  late String groupId;
+  late Widget sut;
+
+  setUp(() {
+    presenter = NextEventPresenterSpy();
+    groupId = anyString();
+
+    /// As I am testing a widget from Material Design it needs to be
+    /// inside a MaterialApp
+    sut = MaterialApp(
+      home: NextEventPage(
+        presenter: presenter,
+        groupId: groupId,
+      ),
+    );
+  });
+
   testWidgets(
     "Should load event data on page init",
     (WidgetTester tester) async {
 
-      final presenter = NextEventPresenterSpy();
-      final groupId = anyString();
-
-      /// As I am testing a widget from Material Design it needs to be
-      /// inside a MaterialApp
-      final sut = MaterialApp(
-        home: NextEventPage(
-          presenter: presenter,
-          groupId: groupId,
-        ),
-      );
-
       /// To test a component I need to create it virtually, so it can emulate
       /// this component to be tested virtually.
       /// And to do this I need to use the method .pump
-
       await tester.pumpWidget(sut);
 
       expect(presenter.loadCallsCount, 1);
