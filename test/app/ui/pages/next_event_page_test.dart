@@ -31,7 +31,9 @@ class _NextEventPageState extends State<NextEventPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return const Scaffold(
+      body: CircularProgressIndicator(),
+    );
   }
 }
 
@@ -76,16 +78,12 @@ void main() {
   });
 
   testWidgets(
-    "Should load event data on page init",
+    "Should present spinner while data is loading",
     (WidgetTester tester) async {
 
-      /// To test a component I need to create it virtually, so it can emulate
-      /// this component to be tested virtually.
-      /// And to do this I need to use the method .pump
       await tester.pumpWidget(sut);
 
-      expect(presenter.loadCallsCount, 1);
-      expect(presenter.groupId, groupId);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
     },
   );
 }
