@@ -4,6 +4,24 @@ import 'package:rxdart/subjects.dart';
 
 import '../../../helpers/fakes.dart';
 
+final class NextEventViewModel {
+
+  final List<NextEventPlayerViewModel> goalKeepers;
+
+  const NextEventViewModel({
+    this.goalKeepers = const [],
+  });
+}
+
+final class NextEventPlayerViewModel {
+
+  final String name;
+
+  const NextEventPlayerViewModel({
+    required this.name,
+  });
+}
+
 final class NextEventPage extends StatefulWidget {
 
   final NextEventPresenter presenter;
@@ -33,14 +51,25 @@ class _NextEventPageState extends State<NextEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
+      body: StreamBuilder<NextEventViewModel>(
         stream: presenter.nextEventStream,
         builder: (context, snapshot) {
           if(snapshot.connectionState != ConnectionState.active) {
             return const CircularProgressIndicator();
           }
 
-          return const SizedBox.shrink();
+          if(snapshot.hasError) return const SizedBox.shrink();
+
+          final nextEvent = snapshot.data!;
+
+          return ListView(
+            children: [
+              const Text("DENTRO - GOLEIROS"),
+              Text(nextEvent.goalKeepers.length.toString()),
+
+              ...nextEvent.goalKeepers.map((goalKeeper) => Text(goalKeeper.name))
+            ],
+          );
         },
       ),
     );
@@ -49,7 +78,7 @@ class _NextEventPageState extends State<NextEventPage> {
 
 abstract interface class NextEventPresenter {
 
-  Stream get nextEventStream;
+  Stream<NextEventViewModel> get nextEventStream;
 
   void loadNextEvent({
     required String groupId,
@@ -60,13 +89,23 @@ final class NextEventPresenterSpy implements NextEventPresenter {
 
   int loadCallsCount = 0;
   String? groupId;
-  var nextEventSubject = BehaviorSubject();
+  var nextEventSubject = BehaviorSubject<NextEventViewModel>();
 
   @override
-  Stream get nextEventStream => nextEventSubject.stream;
+  Stream<NextEventViewModel> get nextEventStream => nextEventSubject.stream;
 
-  void emitNextEvent() {
-    nextEventSubject.add("");
+  /// These emit methods are just to the spy
+
+  void emitNextEvent([NextEventViewModel? viewModel]) {
+    nextEventSubject.add(viewModel ?? const NextEventViewModel());
+  }
+
+  void emitNextEventWith({
+    List<NextEventPlayerViewModel> goalKeepers = const [],
+  }) {
+    nextEventSubject.add(NextEventViewModel(
+      goalKeepers: goalKeepers,
+    ));
   }
 
   void emitError() {
@@ -156,6 +195,30 @@ void main() {
       await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsNothing);
+    },
+  );
+
+  testWidgets(
+    "Should present goalkeepers section",
+    (WidgetTester tester) async {
+
+      await tester.pumpWidget(sut);
+
+      presenter.emitNextEventWith(
+        goalKeepers: const [
+          NextEventPlayerViewModel(name: "Rodrigo"),
+          NextEventPlayerViewModel(name: "Rafael"),
+          NextEventPlayerViewModel(name: "Pedro"),
+        ]
+      );
+
+      await tester.pump();
+
+      expect(find.text("DENTRO - GOLEIROS"), findsOneWidget);
+      expect(find.text("3"), findsOneWidget);
+      expect(find.text("Rodrigo"), findsOneWidget);
+      expect(find.text("Rafael"), findsOneWidget);
+      expect(find.text("Pedro"), findsOneWidget);
     },
   );
 }
