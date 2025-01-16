@@ -69,6 +69,10 @@ final class NextEventPresenterSpy implements NextEventPresenter {
     nextEventSubject.add("");
   }
 
+  void emitError() {
+    nextEventSubject.addError(Error());
+  }
+
   @override
   void loadNextEvent({required String groupId}) {
     loadCallsCount++;
@@ -119,6 +123,30 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
       presenter.emitNextEvent();
+
+      /// So everything that is async (schedule to the future) I need to force my screen to rerender
+      /// virtually because has things to happen (new ui). So to do this
+      /// update I need to use the .pump method. This will execute the next loop from the event
+      /// and will update the screen
+
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    },
+  );
+
+  testWidgets(
+    "Should hide spinner on load error",
+    (WidgetTester tester) async {
+
+      /// When I execute this method I guarantee that I build
+      /// this component virtually and it is with that initial image
+      /// that it asks to render
+      await tester.pumpWidget(sut);
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+      presenter.emitError();
 
       /// So everything that is async (schedule to the future) I need to force my screen to rerender
       /// virtually because has things to happen (new ui). So to do this
