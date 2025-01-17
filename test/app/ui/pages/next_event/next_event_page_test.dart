@@ -1,5 +1,6 @@
 import 'package:advanced_flutter_course/app/presentation/presenters/next_event_presenter.dart';
 import 'package:advanced_flutter_course/app/ui/pages/next_event/next_event_page.dart';
+import 'package:advanced_flutter_course/app/ui/pages/widgets/player_position.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/subjects.dart';
@@ -148,6 +149,8 @@ void main() {
       expect(find.text("Rodrigo"), findsOneWidget);
       expect(find.text("Rafael"), findsOneWidget);
       expect(find.text("Pedro"), findsOneWidget);
+
+      expect(find.byType(PlayerPosition), findsExactly(3));
     },
   );
 
@@ -172,6 +175,8 @@ void main() {
       expect(find.text("Rodrigo"), findsOneWidget);
       expect(find.text("Rafael"), findsOneWidget);
       expect(find.text("Pedro"), findsOneWidget);
+
+      expect(find.byType(PlayerPosition), findsExactly(3));
     },
   );
 
@@ -196,6 +201,8 @@ void main() {
       expect(find.text("Rodrigo"), findsOneWidget);
       expect(find.text("Rafael"), findsOneWidget);
       expect(find.text("Pedro"), findsOneWidget);
+
+      expect(find.byType(PlayerPosition), findsExactly(3));
     },
   );
 
@@ -236,6 +243,8 @@ void main() {
       expect(find.text("Rodrigo"), findsOneWidget);
       expect(find.text("Rafael"), findsOneWidget);
       expect(find.text("Pedro"), findsOneWidget);
+
+      expect(find.byType(PlayerPosition), findsExactly(3));
     },
   );
 
@@ -253,6 +262,8 @@ void main() {
       expect(find.text("DENTRO - JOGADORES"), findsNothing);
       expect(find.text("FORA"), findsNothing);
       expect(find.text("DÚVIDA"), findsNothing);
+
+      expect(find.byType(PlayerPosition), findsNothing);
     },
   );
 }
