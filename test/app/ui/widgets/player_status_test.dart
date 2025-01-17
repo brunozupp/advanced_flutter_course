@@ -3,11 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 final class PlayerStatus extends StatelessWidget {
 
-  final bool isConfirmed;
+  final bool? isConfirmed;
 
   const PlayerStatus({
     super.key,
-    required this.isConfirmed,
+    this.isConfirmed,
   });
 
   @override
@@ -25,6 +25,7 @@ final class PlayerStatus extends StatelessWidget {
   Color getColorStatus() => switch(isConfirmed) {
     true => Colors.green,
     false => Colors.red,
+    _ => Colors.grey,
   };
 }
 
@@ -63,6 +64,24 @@ void main() {
       final boxDecoration = tester.firstWidget<Container>(find.byType(Container)).decoration as BoxDecoration;
 
       expect(boxDecoration.color, Colors.red);
+    },
+  );
+
+  testWidgets(
+    "Should present grey status",
+    (WidgetTester tester) async {
+
+      const sut = MaterialApp(
+        home: PlayerStatus(
+          isConfirmed: null,
+        ),
+      );
+
+      await tester.pumpWidget(sut);
+
+      final boxDecoration = tester.firstWidget<Container>(find.byType(Container)).decoration as BoxDecoration;
+
+      expect(boxDecoration.color, Colors.grey);
     },
   );
 }
