@@ -1,4 +1,5 @@
 import 'package:advanced_flutter_course/app/ui/pages/widgets/player_position.dart';
+import 'package:advanced_flutter_course/app/ui/pages/widgets/player_status.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../presentation/presenters/next_event_presenter.dart';
@@ -25,6 +26,9 @@ class ListSection extends StatelessWidget {
             Text(player.name),
             PlayerPosition(
               position: player.position,
+            ),
+            PlayerStatus(
+              isConfirmed: player.isConfirmed,
             ),
           ],
         )),
