@@ -261,20 +261,6 @@ void main() {
   );
 
   testWidgets(
-    "Should hide all sections",
-    (WidgetTester tester) async {
-
-      await tester.pumpWidget(sut);
-
-      presenter.emitNextEvent();
-
-      await tester.pump();
-
-      expect(find.text("DENTRO - GOLEIROS"), findsNothing);
-    },
-  );
-
-  testWidgets(
     "Should present players section",
     (WidgetTester tester) async {
 
@@ -295,6 +281,21 @@ void main() {
       expect(find.text("Rodrigo"), findsOneWidget);
       expect(find.text("Rafael"), findsOneWidget);
       expect(find.text("Pedro"), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Should hide all sections",
+    (WidgetTester tester) async {
+
+      await tester.pumpWidget(sut);
+
+      presenter.emitNextEvent();
+
+      await tester.pump();
+
+      expect(find.text("DENTRO - GOLEIROS"), findsNothing);
+      expect(find.text("DENTRO - JOGADORES"), findsNothing);
     },
   );
 }
