@@ -6,6 +6,8 @@ import 'package:rxdart/subjects.dart';
 
 import '../../../../helpers/fakes.dart';
 
+/// Different from other test spies, this one will stay here because it is
+/// used just here in this page
 final class NextEventPresenterSpy implements NextEventPresenter {
 
   int loadCallsCount = 0;
