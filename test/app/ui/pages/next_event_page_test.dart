@@ -8,10 +8,12 @@ final class NextEventViewModel {
 
   final List<NextEventPlayerViewModel> goalKeepers;
   final List<NextEventPlayerViewModel> players;
+  final List<NextEventPlayerViewModel> out;
 
   const NextEventViewModel({
     this.goalKeepers = const [],
     this.players = const [],
+    this.out = const [],
   });
 }
 
@@ -71,7 +73,7 @@ class _NextEventPageState extends State<NextEventPage> {
                 child: ListSection(
                   title: "DENTRO - GOLEIROS",
                   players: nextEvent.goalKeepers,
-                )
+                ),
               ),
 
               Visibility(
@@ -79,7 +81,15 @@ class _NextEventPageState extends State<NextEventPage> {
                 child: ListSection(
                   title: "DENTRO - JOGADORES",
                   players: nextEvent.players,
-                )
+                ),
+              ),
+
+              Visibility(
+                visible: nextEvent.out.isNotEmpty,
+                child: ListSection(
+                  title: "FORA",
+                  players: nextEvent.out,
+                ),
               ),
             ],
           );
@@ -139,10 +149,12 @@ final class NextEventPresenterSpy implements NextEventPresenter {
   void emitNextEventWith({
     List<NextEventPlayerViewModel> goalKeepers = const [],
     List<NextEventPlayerViewModel> players = const [],
+    List<NextEventPlayerViewModel> out = const [],
   }) {
     nextEventSubject.add(NextEventViewModel(
       goalKeepers: goalKeepers,
       players: players,
+      out: out,
     ));
   }
 
@@ -296,6 +308,30 @@ void main() {
 
       expect(find.text("DENTRO - GOLEIROS"), findsNothing);
       expect(find.text("DENTRO - JOGADORES"), findsNothing);
+    },
+  );
+
+  testWidgets(
+    "Should present out section",
+    (WidgetTester tester) async {
+
+      await tester.pumpWidget(sut);
+
+      presenter.emitNextEventWith(
+        out: const [
+          NextEventPlayerViewModel(name: "Rodrigo"),
+          NextEventPlayerViewModel(name: "Rafael"),
+          NextEventPlayerViewModel(name: "Pedro"),
+        ]
+      );
+
+      await tester.pump();
+
+      expect(find.text("FORA"), findsOneWidget);
+      expect(find.text("3"), findsOneWidget);
+      expect(find.text("Rodrigo"), findsOneWidget);
+      expect(find.text("Rafael"), findsOneWidget);
+      expect(find.text("Pedro"), findsOneWidget);
     },
   );
 }
