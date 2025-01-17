@@ -3,17 +3,22 @@ import 'package:flutter_test/flutter_test.dart';
 
 class PlayerPosition extends StatelessWidget {
 
-  final String position;
+  final String? position;
 
   const PlayerPosition({
     super.key,
-    required this.position,
+    this.position,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Text("Goleiro");
+    return Text(buildPositionLabel());
   }
+
+  String buildPositionLabel() => switch(position) {
+    "goalkeeper" => "Goleiro",
+    _ => "Gandula"
+  };
 }
 
 void main() {
@@ -31,6 +36,22 @@ void main() {
       await tester.pumpWidget(sut);
 
       expect(find.text("Goleiro"), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Should handle positionless",
+    (WidgetTester tester) async {
+
+      const sut = MaterialApp(
+        home: PlayerPosition(
+          position: null,
+        ),
+      );
+
+      await tester.pumpWidget(sut);
+
+      expect(find.text("Gandula"), findsOneWidget);
     },
   );
 }
