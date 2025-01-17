@@ -7,9 +7,11 @@ import '../../../helpers/fakes.dart';
 final class NextEventViewModel {
 
   final List<NextEventPlayerViewModel> goalKeepers;
+  final List<NextEventPlayerViewModel> players;
 
   const NextEventViewModel({
     this.goalKeepers = const [],
+    this.players = const [],
   });
 }
 
@@ -71,6 +73,14 @@ class _NextEventPageState extends State<NextEventPage> {
                   players: nextEvent.goalKeepers,
                 )
               ),
+
+              Visibility(
+                visible: nextEvent.players.isNotEmpty,
+                child: ListSection(
+                  title: "DENTRO - JOGADORES",
+                  players: nextEvent.players,
+                )
+              ),
             ],
           );
         },
@@ -128,9 +138,11 @@ final class NextEventPresenterSpy implements NextEventPresenter {
 
   void emitNextEventWith({
     List<NextEventPlayerViewModel> goalKeepers = const [],
+    List<NextEventPlayerViewModel> players = const [],
   }) {
     nextEventSubject.add(NextEventViewModel(
       goalKeepers: goalKeepers,
+      players: players,
     ));
   }
 
@@ -259,6 +271,30 @@ void main() {
       await tester.pump();
 
       expect(find.text("DENTRO - GOLEIROS"), findsNothing);
+    },
+  );
+
+  testWidgets(
+    "Should present players section",
+    (WidgetTester tester) async {
+
+      await tester.pumpWidget(sut);
+
+      presenter.emitNextEventWith(
+        players: const [
+          NextEventPlayerViewModel(name: "Rodrigo"),
+          NextEventPlayerViewModel(name: "Rafael"),
+          NextEventPlayerViewModel(name: "Pedro"),
+        ]
+      );
+
+      await tester.pump();
+
+      expect(find.text("DENTRO - JOGADORES"), findsOneWidget);
+      expect(find.text("3"), findsOneWidget);
+      expect(find.text("Rodrigo"), findsOneWidget);
+      expect(find.text("Rafael"), findsOneWidget);
+      expect(find.text("Pedro"), findsOneWidget);
     },
   );
 }
