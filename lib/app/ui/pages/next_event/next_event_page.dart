@@ -36,6 +36,13 @@ class _NextEventPageState extends State<NextEventPage> {
       body: StreamBuilder<NextEventViewModel>(
         stream: presenter.nextEventStream,
         builder: (context, snapshot) {
+
+          /// After receiving for the first time a value inside this stream
+          /// its state stays like .active forever. Only if an error occurrs is
+          /// that this state will change, otherwise it will be .active forever
+          /// So the state .waiting is just when I built the component and no
+          /// value enters in this stream.
+          /// Said that, this initial state will only happens one time
           if(snapshot.connectionState != ConnectionState.active) {
             return const CircularProgressIndicator();
           }
