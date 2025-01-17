@@ -1,5 +1,6 @@
 import 'package:advanced_flutter_course/app/presentation/presenters/next_event_presenter.dart';
 import 'package:advanced_flutter_course/app/ui/pages/next_event/next_event_page.dart';
+import 'package:advanced_flutter_course/app/ui/pages/widgets/player_photo.dart';
 import 'package:advanced_flutter_course/app/ui/pages/widgets/player_position.dart';
 import 'package:advanced_flutter_course/app/ui/pages/widgets/player_status.dart';
 import 'package:flutter/material.dart';
@@ -136,10 +137,12 @@ void main() {
       await tester.pumpWidget(sut);
 
       presenter.emitNextEventWith(
-        goalKeepers: const [
-          NextEventPlayerViewModel(name: "Rodrigo"),
-          NextEventPlayerViewModel(name: "Rafael"),
-          NextEventPlayerViewModel(name: "Pedro"),
+        goalKeepers: [
+          /// I can pass anyString to the initials because the value itself
+          /// doesn't care to me.
+          NextEventPlayerViewModel(name: "Rodrigo", initials: anyString()),
+          NextEventPlayerViewModel(name: "Rafael", initials: anyString()),
+          NextEventPlayerViewModel(name: "Pedro", initials: anyString()),
         ]
       );
 
@@ -153,6 +156,7 @@ void main() {
 
       expect(find.byType(PlayerPosition), findsExactly(3));
       expect(find.byType(PlayerStatus), findsExactly(3));
+      expect(find.byType(PlayerPhoto), findsExactly(3));
     },
   );
 
@@ -163,10 +167,10 @@ void main() {
       await tester.pumpWidget(sut);
 
       presenter.emitNextEventWith(
-        players: const [
-          NextEventPlayerViewModel(name: "Rodrigo"),
-          NextEventPlayerViewModel(name: "Rafael"),
-          NextEventPlayerViewModel(name: "Pedro"),
+        players: [
+          NextEventPlayerViewModel(name: "Rodrigo", initials: anyString()),
+          NextEventPlayerViewModel(name: "Rafael", initials: anyString()),
+          NextEventPlayerViewModel(name: "Pedro", initials: anyString()),
         ]
       );
 
@@ -180,6 +184,7 @@ void main() {
 
       expect(find.byType(PlayerPosition), findsExactly(3));
       expect(find.byType(PlayerStatus), findsExactly(3));
+      expect(find.byType(PlayerPhoto), findsExactly(3));
     },
   );
 
@@ -190,10 +195,10 @@ void main() {
       await tester.pumpWidget(sut);
 
       presenter.emitNextEventWith(
-        out: const [
-          NextEventPlayerViewModel(name: "Rodrigo"),
-          NextEventPlayerViewModel(name: "Rafael"),
-          NextEventPlayerViewModel(name: "Pedro"),
+        out: [
+          NextEventPlayerViewModel(name: "Rodrigo", initials: anyString()),
+          NextEventPlayerViewModel(name: "Rafael", initials: anyString()),
+          NextEventPlayerViewModel(name: "Pedro", initials: anyString()),
         ]
       );
 
@@ -207,6 +212,7 @@ void main() {
 
       expect(find.byType(PlayerPosition), findsExactly(3));
       expect(find.byType(PlayerStatus), findsExactly(3));
+      expect(find.byType(PlayerPhoto), findsExactly(3));
     },
   );
 
@@ -233,10 +239,10 @@ void main() {
       await tester.pumpWidget(sut);
 
       presenter.emitNextEventWith(
-        doubt: const [
-          NextEventPlayerViewModel(name: "Rodrigo"),
-          NextEventPlayerViewModel(name: "Rafael"),
-          NextEventPlayerViewModel(name: "Pedro"),
+        doubt: [
+          NextEventPlayerViewModel(name: "Rodrigo", initials: anyString()),
+          NextEventPlayerViewModel(name: "Rafael", initials: anyString()),
+          NextEventPlayerViewModel(name: "Pedro", initials: anyString()),
         ]
       );
 
@@ -250,6 +256,7 @@ void main() {
 
       expect(find.byType(PlayerPosition), findsExactly(3));
       expect(find.byType(PlayerStatus), findsExactly(3));
+      expect(find.byType(PlayerPhoto), findsExactly(3));
     },
   );
 
@@ -270,6 +277,7 @@ void main() {
 
       expect(find.byType(PlayerPosition), findsNothing);
       expect(find.byType(PlayerStatus), findsNothing);
+      expect(find.byType(PlayerPhoto), findsNothing);
     },
   );
 }

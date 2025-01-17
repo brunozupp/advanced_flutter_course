@@ -1,3 +1,4 @@
+import 'package:advanced_flutter_course/app/ui/pages/widgets/player_photo.dart';
 import 'package:advanced_flutter_course/app/ui/pages/widgets/player_position.dart';
 import 'package:advanced_flutter_course/app/ui/pages/widgets/player_status.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,10 @@ class ListSection extends StatelessWidget {
             ),
             PlayerStatus(
               isConfirmed: player.isConfirmed,
+            ),
+            PlayerPhoto(
+              initials: player.initials,
+              photo: player.photo,
             ),
           ],
         )),
