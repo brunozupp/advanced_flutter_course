@@ -280,4 +280,29 @@ void main() {
       expect(find.byType(PlayerPhoto), findsNothing);
     },
   );
+
+  testWidgets(
+    "Should present error message on load error",
+    (WidgetTester tester) async {
+
+      await tester.pumpWidget(sut);
+
+      presenter.emitError();
+
+      // To guarantee that this page received the event in the stream
+      await tester.pump();
+
+      expect(find.text("DENTRO - GOLEIROS"), findsNothing);
+      expect(find.text("DENTRO - JOGADORES"), findsNothing);
+      expect(find.text("FORA"), findsNothing);
+      expect(find.text("DÚVIDA"), findsNothing);
+
+      expect(find.byType(PlayerPosition), findsNothing);
+      expect(find.byType(PlayerStatus), findsNothing);
+      expect(find.byType(PlayerPhoto), findsNothing);
+
+      expect(find.text("Algo errado aconteceu, tente novamente"), findsOneWidget);
+      expect(find.text("Recarregar"), findsOneWidget);
+    },
+  );
 }

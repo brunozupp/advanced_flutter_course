@@ -1,3 +1,4 @@
+import 'package:advanced_flutter_course/app/ui/pages/next_event/widgets/next_event_error_layout.dart';
 import 'package:flutter/material.dart';
 
 import '../../../presentation/presenters/next_event_presenter.dart';
@@ -39,7 +40,7 @@ class _NextEventPageState extends State<NextEventPage> {
             return const CircularProgressIndicator();
           }
 
-          if(snapshot.hasError) return const SizedBox.shrink();
+          if(snapshot.hasError) return const NextEventErrorLayout();
 
           final nextEvent = snapshot.data!;
 
