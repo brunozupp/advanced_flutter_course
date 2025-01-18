@@ -30,15 +30,19 @@ class _NextEventPageState extends State<NextEventPage> {
     presenter.loadNextEvent(groupId: widget.groupId);
 
     presenter.isBusyStream.listen((isBusy) {
-      showLoading();
+      isBusy ? showLoading() : hideLoading();
     });
   }
 
   void showLoading() {
     showDialog(
       context: context,
-      builder: (context) => CircularProgressIndicator(),
+      builder: (context) => const CircularProgressIndicator(),
     );
+  }
+
+  void hideLoading() {
+    Navigator.of(context).maybePop();
   }
 
   @override

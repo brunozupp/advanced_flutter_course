@@ -49,8 +49,8 @@ final class NextEventPresenterSpy implements NextEventPresenter {
     nextEventSubject.addError(Error());
   }
 
-  void emitIsBusy() {
-    isBusySubject.add(true);
+  void emitIsBusy([bool isBusy = true]) {
+    isBusySubject.add(isBusy);
   }
 
   @override
@@ -357,6 +357,13 @@ void main() {
       await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+      presenter.emitIsBusy(false);
+
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsNothing);
     },
   );
+
 }
