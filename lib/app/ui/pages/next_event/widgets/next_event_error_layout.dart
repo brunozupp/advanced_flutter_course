@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 class NextEventErrorLayout extends StatelessWidget {
-  const NextEventErrorLayout({super.key});
+
+  final VoidCallback onRetry;
+
+  const NextEventErrorLayout({
+    super.key,
+    required this.onRetry,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +15,7 @@ class NextEventErrorLayout extends StatelessWidget {
       children: [
         const Text("Algo errado aconteceu, tente novamente"),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: onRetry,
           child: const Text("Recarregar"),
         ),
       ],

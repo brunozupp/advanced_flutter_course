@@ -5,6 +5,10 @@ abstract interface class NextEventPresenter {
   void loadNextEvent({
     required String groupId,
   });
+
+  void reloadNextEvent({
+    required String groupId,
+  });
 }
 
 /// Because these ViewModels are a direct dependency from NextEventPresenter

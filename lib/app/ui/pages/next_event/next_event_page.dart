@@ -47,7 +47,13 @@ class _NextEventPageState extends State<NextEventPage> {
             return const CircularProgressIndicator();
           }
 
-          if(snapshot.hasError) return const NextEventErrorLayout();
+          if(snapshot.hasError) {
+            return NextEventErrorLayout(
+              onRetry: () {
+                presenter.reloadNextEvent(groupId: widget.groupId);
+              },
+            );
+          }
 
           final nextEvent = snapshot.data!;
 
