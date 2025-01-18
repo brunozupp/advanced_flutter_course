@@ -16,10 +16,14 @@ final class NextEventPresenterSpy implements NextEventPresenter {
   int loadCallsCount = 0;
   int reloadCallsCount = 0;
   String? groupId;
-  var nextEventSubject = BehaviorSubject<NextEventViewModel>();
+  final nextEventSubject = BehaviorSubject<NextEventViewModel>();
+  final isBusySubject = BehaviorSubject<bool>();
 
   @override
   Stream<NextEventViewModel> get nextEventStream => nextEventSubject.stream;
+
+  @override
+  Stream<bool> get isBusyStream => isBusySubject.stream;
 
   /// These emit methods are just to the spy
 
@@ -43,6 +47,10 @@ final class NextEventPresenterSpy implements NextEventPresenter {
 
   void emitError() {
     nextEventSubject.addError(Error());
+  }
+
+  void emitIsBusy() {
+    isBusySubject.add(true);
   }
 
   @override
@@ -327,6 +335,28 @@ void main() {
 
       expect(presenter.reloadCallsCount, 1);
       expect(presenter.groupId, groupId);
+    },
+  );
+
+  testWidgets(
+    "Should handle spinner on page busy event",
+    (WidgetTester tester) async {
+
+      /// To test this correctly I need to leave the initial state
+      /// because is when the screen shows the spinner. To do this I
+      /// need to emit an event just to my test goes accordingly to the flow
+
+      await tester.pumpWidget(sut);
+
+      presenter.emitError();
+
+      await tester.pump();
+
+      presenter.emitIsBusy();
+
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
     },
   );
 }

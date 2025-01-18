@@ -28,6 +28,17 @@ class _NextEventPageState extends State<NextEventPage> {
     super.initState();
 
     presenter.loadNextEvent(groupId: widget.groupId);
+
+    presenter.isBusyStream.listen((isBusy) {
+      showLoading();
+    });
+  }
+
+  void showLoading() {
+    showDialog(
+      context: context,
+      builder: (context) => CircularProgressIndicator(),
+    );
   }
 
   @override
