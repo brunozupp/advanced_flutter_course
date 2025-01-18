@@ -366,4 +366,39 @@ void main() {
     },
   );
 
+  testWidgets(
+    "Should load event data on pull to refresh",
+    (WidgetTester tester) async {
+
+      /// To test this correctly I need to leave the initial state
+      /// because is when the screen shows the spinner. To do this I
+      /// need to emit an event just to my test goes accordingly to the flow
+
+      await tester.pumpWidget(sut);
+
+      presenter.emitNextEvent();
+
+      await tester.pump();
+
+      /// to simulate a pull refresh I have two ways
+      /// fling -> I can choose an element from my UI to tap it and
+      /// drag down
+      /// flingFrom -> I can choose na position
+      await tester.flingFrom(
+        const Offset(50, 100), // Start position x and y
+        const Offset(0, 400), // The offset added to the start position to simulate the drag movement
+        800, // how many pixels per second I will drag down
+      );
+
+      /// This will execute the pump until there is no more animations
+      /// to be executed in the screen. So that is why I need to use it
+      /// to test the pull refresh action, because it needs some time
+      /// to be executed.
+      await tester.pumpAndSettle();
+
+      expect(presenter.reloadCallsCount, 1);
+      expect(presenter.groupId, groupId);
+    },
+  );
+
 }

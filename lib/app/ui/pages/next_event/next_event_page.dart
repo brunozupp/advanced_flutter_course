@@ -72,40 +72,45 @@ class _NextEventPageState extends State<NextEventPage> {
 
           final nextEvent = snapshot.data!;
 
-          return ListView(
-            children: [
-              Visibility(
-                visible: nextEvent.goalKeepers.isNotEmpty,
-                child: ListSection(
-                  title: "DENTRO - GOLEIROS",
-                  players: nextEvent.goalKeepers,
+          return RefreshIndicator(
+            onRefresh: () async {
+              presenter.reloadNextEvent(groupId: widget.groupId);
+            },
+            child: ListView(
+              children: [
+                Visibility(
+                  visible: nextEvent.goalKeepers.isNotEmpty,
+                  child: ListSection(
+                    title: "DENTRO - GOLEIROS",
+                    players: nextEvent.goalKeepers,
+                  ),
                 ),
-              ),
 
-              Visibility(
-                visible: nextEvent.players.isNotEmpty,
-                child: ListSection(
-                  title: "DENTRO - JOGADORES",
-                  players: nextEvent.players,
+                Visibility(
+                  visible: nextEvent.players.isNotEmpty,
+                  child: ListSection(
+                    title: "DENTRO - JOGADORES",
+                    players: nextEvent.players,
+                  ),
                 ),
-              ),
 
-              Visibility(
-                visible: nextEvent.out.isNotEmpty,
-                child: ListSection(
-                  title: "FORA",
-                  players: nextEvent.out,
+                Visibility(
+                  visible: nextEvent.out.isNotEmpty,
+                  child: ListSection(
+                    title: "FORA",
+                    players: nextEvent.out,
+                  ),
                 ),
-              ),
 
-              Visibility(
-                visible: nextEvent.doubt.isNotEmpty,
-                child: ListSection(
-                  title: "DÚVIDA",
-                  players: nextEvent.doubt,
+                Visibility(
+                  visible: nextEvent.doubt.isNotEmpty,
+                  child: ListSection(
+                    title: "DÚVIDA",
+                    players: nextEvent.doubt,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
