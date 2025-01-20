@@ -1,4 +1,3 @@
-import 'package:advanced_flutter_course/app/domain/usecases/next_event_loader_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/fakes.dart';
@@ -35,17 +34,23 @@ final class NextEventLoaderUseCaseSpy {
 
 void main() {
 
+  late NextEventLoaderUseCaseSpy nextEventLoader;
+  late String groupId;
+  late NextEventRxPresenter sut;
+
+  setUp(() {
+    nextEventLoader = NextEventLoaderUseCaseSpy();
+
+    groupId = anyString();
+
+    sut = NextEventRxPresenter(
+      nextEventLoader: nextEventLoader, // Tear-off pointer
+    );
+  });
+
   test(
     "Should get event data",
     () async {
-
-      final nextEventLoader = NextEventLoaderUseCaseSpy();
-
-      final groupId = anyString();
-
-      final sut = NextEventRxPresenter(
-        nextEventLoader: nextEventLoader, // Tear-off pointer
-      );
 
       await sut.loadNextEvent(groupId: groupId);
 
