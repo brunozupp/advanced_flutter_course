@@ -54,10 +54,10 @@ final class NextEventPresenterSpy implements NextEventPresenter {
   }
 
   @override
-  void loadNextEvent({
+  Future<void> loadNextEvent({
     required String groupId,
     bool isReload = false,
-  }) {
+  }) async {
     callsCount++;
     this.groupId = groupId;
     this.isReload = isReload;

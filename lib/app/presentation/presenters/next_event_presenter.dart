@@ -4,7 +4,7 @@ abstract interface class NextEventPresenter {
 
   Stream<bool> get isBusyStream;
 
-  void loadNextEvent({
+  Future<void> loadNextEvent({
     required String groupId,
     bool isReload = false,
   });
