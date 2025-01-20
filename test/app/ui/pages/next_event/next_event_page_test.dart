@@ -16,6 +16,7 @@ final class NextEventPresenterSpy implements NextEventPresenter {
   int loadCallsCount = 0;
   int reloadCallsCount = 0;
   String? groupId;
+  bool? isReload;
   final nextEventSubject = BehaviorSubject<NextEventViewModel>();
   final isBusySubject = BehaviorSubject<bool>();
 
@@ -54,9 +55,13 @@ final class NextEventPresenterSpy implements NextEventPresenter {
   }
 
   @override
-  void loadNextEvent({required String groupId}) {
+  void loadNextEvent({
+    required String groupId,
+    bool isReload = false,
+  }) {
     loadCallsCount++;
     this.groupId = groupId;
+    this.isReload = isReload;
   }
 
   @override
@@ -86,6 +91,18 @@ void main() {
       ),
     );
   });
+
+  testWidgets(
+    "Should load event data on page init",
+    (WidgetTester tester) async {
+
+      await tester.pumpWidget(sut);
+
+      expect(presenter.loadCallsCount, 1);
+      expect(presenter.groupId, groupId);
+      expect(presenter.isReload, false);
+    },
+  );
 
   testWidgets(
     "Should present spinner while data is loading",
@@ -383,7 +400,7 @@ void main() {
       /// to simulate a pull refresh I have two ways
       /// fling -> I can choose an element from my UI to tap it and
       /// drag down
-      /// flingFrom -> I can choose na position
+      /// flingFrom -> I can choose a position
       await tester.flingFrom(
         const Offset(50, 100), // Start position x and y
         const Offset(0, 400), // The offset added to the start position to simulate the drag movement

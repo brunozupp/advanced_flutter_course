@@ -6,6 +6,7 @@ abstract interface class NextEventPresenter {
 
   void loadNextEvent({
     required String groupId,
+    bool isReload = false,
   });
 
   void reloadNextEvent({
