@@ -65,7 +65,10 @@ class _NextEventPageState extends State<NextEventPage> {
           if(snapshot.hasError) {
             return NextEventErrorLayout(
               onRetry: () {
-                presenter.reloadNextEvent(groupId: widget.groupId);
+                presenter.loadNextEvent(
+                  groupId: widget.groupId,
+                  isReload: true,
+                );
               },
             );
           }
