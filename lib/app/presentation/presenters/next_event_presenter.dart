@@ -8,10 +8,6 @@ abstract interface class NextEventPresenter {
     required String groupId,
     bool isReload = false,
   });
-
-  void reloadNextEvent({
-    required String groupId,
-  });
 }
 
 /// Because these ViewModels are a direct dependency from NextEventPresenter
