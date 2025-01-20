@@ -77,7 +77,10 @@ class _NextEventPageState extends State<NextEventPage> {
 
           return RefreshIndicator(
             onRefresh: () async {
-              presenter.reloadNextEvent(groupId: widget.groupId);
+              presenter.loadNextEvent(
+                groupId: widget.groupId,
+                isReload: true,
+              );
             },
             child: ListView(
               children: [
