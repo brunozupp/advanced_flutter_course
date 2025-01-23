@@ -56,7 +56,8 @@ void main() {
     groupId = anyString();
 
     sut = NextEventRxPresenter(
-      nextEventLoader: nextEventLoader, // Tear-off pointer
+      //nextEventLoader: nextEventLoader, // Tear-off pointer like this will work too
+      nextEventLoader: nextEventLoader.call, // Tear-off pointer
     );
   });
 
