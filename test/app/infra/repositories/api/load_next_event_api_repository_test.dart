@@ -3,7 +3,7 @@ import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_eve
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/fakes.dart';
-import 'clients/http_get_client_spy.dart';
+import 'mocks/http_get_client_spy.dart';
 
 void main() {
 

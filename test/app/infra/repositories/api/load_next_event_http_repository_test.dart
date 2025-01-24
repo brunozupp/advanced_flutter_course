@@ -5,7 +5,7 @@ import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_eve
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../helpers/fakes.dart';
-import 'clients/client_spy.dart';
+import 'mocks/client_spy.dart';
 
 void main() {
 

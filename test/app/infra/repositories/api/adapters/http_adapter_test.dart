@@ -6,7 +6,7 @@ import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../../helpers/fakes.dart';
-import '../clients/client_spy.dart';
+import '../mocks/client_spy.dart';
 
 
 void main() {
