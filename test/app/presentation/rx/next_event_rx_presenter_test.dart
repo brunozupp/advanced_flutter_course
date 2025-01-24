@@ -39,11 +39,18 @@ final class NextEventRxPresenter {
   }) async {
 
     try {
-      _isBusyStream.add(true);
+
+      if(isReload) {
+        _isBusyStream.add(true);
+      }
+
       await nextEventLoader(groupId: groupId);
     } catch (e) {
       _nextEventSubject.addError(e);
-      _isBusyStream.add(false);
+
+      if(isReload) {
+        _isBusyStream.add(false);
+      }
     }
   }
 }
@@ -144,6 +151,26 @@ void main() {
       /// of the TDD) stays inside the Stream.listen. Because
       /// inside it that I will have access to the values
       /// and so I will put the expects there.
+    },
+  );
+
+  test(
+    "Should emit correct events on load with error",
+    () async {
+
+      nextEventLoader.error = Error();
+
+      expectLater(
+        sut.nextEventStream,
+        emitsError(nextEventLoader.error),
+      );
+
+      // If my stream emits any value it will make this test fails
+      sut.isBusyStream.listen(neverCalled);
+
+      await sut.loadNextEvent(
+        groupId: groupId,
+      );
     },
   );
 }
