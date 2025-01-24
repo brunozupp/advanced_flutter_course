@@ -5,34 +5,7 @@ import 'package:advanced_flutter_course/app/domain/usecases/next_event_loader_us
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/fakes.dart';
-
-/// Mock, Spy, Stub
-/// When I test both input and output it's a spy;
-/// When I am worried only about the input it's a mock;
-/// When I am worried only about the output it's a stub;
-class LoadNextEventSpyRepository implements ILoadNextEventRepository {
-
-  /// These properties make sense just in this case, when I make a Mock
-  /// There is no sense doing this in a real repository implementation.
-  /// But in the case of mocks it's acceptable to test things like if
-  /// the inputs (parameters) are correct.
-  String? groupId;
-  var callsCount = 0;
-
-  NextEvent? output;
-
-  Error? error;
-
-  @override
-  Future<NextEvent> loadNextEvent({required String groupId}) async {
-    this.groupId = groupId;
-    callsCount++;
-
-    if(error != null) throw error!;
-
-    return output!;
-  }
-}
+import '../../infra/mocks/load_next_event_repository_spy.dart';
 
 void main() {
 
@@ -45,7 +18,7 @@ void main() {
 
     groupId = anyString();
 
-    repository = LoadNextEventSpyRepository()
+    repository = LoadNextEventRepositorySpy()
       ..output = NextEvent(
         groupName: "any group name",
         date: DateTime.now(),
@@ -80,8 +53,8 @@ void main() {
         groupId: groupId,
       );
 
-      expect((repository as LoadNextEventSpyRepository).groupId, groupId);
-      expect((repository as LoadNextEventSpyRepository).callsCount, 1);
+      expect((repository as LoadNextEventRepositorySpy).groupId, groupId);
+      expect((repository as LoadNextEventRepositorySpy).callsCount, 1);
     },
   );
 
@@ -93,7 +66,7 @@ void main() {
         groupId: groupId,
       );
 
-      final repoParsed = (repository as LoadNextEventSpyRepository);
+      final repoParsed = (repository as LoadNextEventRepositorySpy);
 
       expect(event.groupName, repoParsed.output?.groupName);
       expect(event.date, repoParsed.output?.date);
@@ -120,7 +93,7 @@ void main() {
     "Should rethrow on error",
     () async {
 
-      final repoParsed = (repository as LoadNextEventSpyRepository);
+      final repoParsed = (repository as LoadNextEventRepositorySpy);
 
       final error = Error();
 
