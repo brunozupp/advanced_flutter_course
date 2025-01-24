@@ -21,7 +21,7 @@ import '../../../helpers/fakes.dart';
 /// But the usecase is a layer that is abstracted enough. It's rare the
 /// time I will have 2 implementations from a usecase. That's why I
 /// don't create an interface to the usecase.
-final class NextEventRxPresenter {
+final class NextEventRxPresenter implements NextEventPresenter {
 
   final Future<NextEvent> Function({
     required String groupId,
@@ -34,9 +34,13 @@ final class NextEventRxPresenter {
   final _nextEventSubject = BehaviorSubject<NextEventViewModel>();
   final _isBusyStream = BehaviorSubject<bool>();
 
+  @override
   Stream<NextEventViewModel> get nextEventStream => _nextEventSubject.stream;
+
+  @override
   Stream<bool> get isBusyStream => _isBusyStream.stream;
 
+  @override
   Future<void> loadNextEvent({
     required String groupId,
     bool isReload = false,
