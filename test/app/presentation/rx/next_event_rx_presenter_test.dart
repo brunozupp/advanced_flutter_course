@@ -490,7 +490,7 @@ void main() {
   );
 
   test(
-    "Should map goalkeeper player",
+    "Should map goalkeeper",
     () async {
 
       /// I need to guarantee that the isConfirmed is true
@@ -576,6 +576,38 @@ void main() {
         expect(event.players.length, 2);
         expect(event.players[0].name, 'B');
         expect(event.players[1].name, 'E');
+      });
+
+      await sut.loadNextEvent(
+        groupId: groupId,
+      );
+    },
+  );
+
+  test(
+    "Should map player",
+    () async {
+
+      /// position can be any value (even null), but not goalkeeper
+      final player = NextEventPlayer(
+        id: anyString(),
+        name: anyString(),
+        isConfirmed: true,
+        photo: anyString(),
+        position: anyString(),
+        confirmationDate: anyDate(),
+      );
+
+      nextEventLoader.simulatePlayers([
+        player,
+      ]);
+
+      sut.nextEventStream.listen((event) {
+        expect(event.players[0].name, player.name);
+        expect(event.players[0].initials, player.initials);
+        expect(event.players[0].isConfirmed, player.isConfirmed);
+        expect(event.players[0].photo, player.photo);
+        expect(event.players[0].position, player.position);
       });
 
       await sut.loadNextEvent(
