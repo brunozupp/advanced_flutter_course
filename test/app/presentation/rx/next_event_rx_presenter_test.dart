@@ -1,5 +1,6 @@
 @Timeout(Duration(seconds: 1))
 
+import 'package:advanced_flutter_course/app/presentation/presenters/next_event_presenter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -27,10 +28,10 @@ final class NextEventRxPresenter {
     required this.nextEventLoader,
   });
 
-  final _nextEventSubject = BehaviorSubject();
+  final _nextEventSubject = BehaviorSubject<NextEventViewModel>();
   final _isBusyStream = BehaviorSubject<bool>();
 
-  Stream get nextEventStream => _nextEventSubject.stream;
+  Stream<NextEventViewModel> get nextEventStream => _nextEventSubject.stream;
   Stream<bool> get isBusyStream => _isBusyStream.stream;
 
   Future<void> loadNextEvent({
@@ -45,6 +46,8 @@ final class NextEventRxPresenter {
       }
 
       await nextEventLoader(groupId: groupId);
+      _nextEventSubject.add(const NextEventViewModel());
+
     } catch (e) {
       _nextEventSubject.addError(e);
 
@@ -182,6 +185,11 @@ void main() {
       expectLater(
         sut.isBusyStream,
         emitsInOrder([true, false]),
+      );
+
+      expectLater(
+        sut.nextEventStream,
+        emits(const TypeMatcher<NextEventViewModel>()),
       );
 
       await sut.loadNextEvent(
