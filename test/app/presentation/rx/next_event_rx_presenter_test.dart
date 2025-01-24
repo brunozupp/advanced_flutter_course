@@ -190,4 +190,16 @@ void main() {
       );
     },
   );
+
+  test(
+    "Should emit correct events on load with success",
+    () async {
+
+      sut.isBusyStream.listen(neverCalled);
+
+      await sut.loadNextEvent(
+        groupId: groupId,
+      );
+    },
+  );
 }
