@@ -72,6 +72,11 @@ final class NextEventRxPresenter {
             .sortedBy((player) => player.confirmationDate!)
             .map(_mapPlayerToViewModel)
             .toList(),
+        goalKeepers: event.players
+            .where((player) => player.confirmationDate != null && player.isConfirmed && player.position == "goalkeeper")
+            .sortedBy((player) => player.confirmationDate!)
+            .map(_mapPlayerToViewModel)
+            .toList(),
   );
 
   NextEventPlayerViewModel _mapPlayerToViewModel(NextEventPlayer player) =>
@@ -256,8 +261,7 @@ void main() {
     },
   );
 
-  /// The rule to a player enters to the doubt list is
-  /// if he/she doesn't have confirmationDate.
+  /// Doubt list is to have confirmationDate == null
   test(
     "Should build doubt list sorted by name",
     () async {
@@ -408,6 +412,66 @@ void main() {
         expect(event.out[0].isConfirmed, player.isConfirmed);
         expect(event.out[0].photo, player.photo);
         expect(event.out[0].position, player.position);
+      });
+
+      await sut.loadNextEvent(
+        groupId: groupId,
+      );
+    },
+  );
+
+  /// Out list has confirmationDate always
+  /// IsConfirmed is always false
+  test(
+    "Should build goalkeepers list sorted by confirmation date",
+    () async {
+
+      nextEventLoader.simulatePlayers([
+        NextEventPlayer(
+          id: anyString(),
+          name: 'C',
+          isConfirmed: true,
+          confirmationDate: DateTime(2024,1,1,10),
+          position: "goalkeeper",
+        ),
+        NextEventPlayer(
+          id: anyString(),
+          name: 'A',
+          isConfirmed: anyBool(),
+        ),
+        NextEventPlayer(
+          id: anyString(),
+          name: 'B',
+          isConfirmed: true,
+          confirmationDate: DateTime(2024,1,1,11),
+          position: "defender",
+        ),
+        NextEventPlayer(
+          id: anyString(),
+          name: 'D',
+          isConfirmed: false,
+          confirmationDate: DateTime(2024,1,1,9),
+          position: "goalkeeper",
+        ),
+        NextEventPlayer(
+          id: anyString(),
+          name: 'E',
+          isConfirmed: true,
+          confirmationDate: DateTime(2024,1,1,12),
+        ),
+        NextEventPlayer(
+          id: anyString(),
+          name: 'F',
+          isConfirmed: true,
+          confirmationDate: DateTime(2024,1,1,8),
+          position: "goalkeeper",
+        ),
+      ]);
+
+      sut.nextEventStream.listen((event) {
+        expect(event.goalKeepers.length, 2);
+        expect(event.goalKeepers[0].name, 'F');
+        expect(event.goalKeepers[1].name, 'C');
       });
 
       await sut.loadNextEvent(
