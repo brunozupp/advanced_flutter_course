@@ -65,28 +65,55 @@ final class NextEventRxPresenter implements NextEventPresenter {
     }
   }
 
-  NextEventViewModel _mapEventToViewModel(NextEvent event) => NextEventViewModel(
-        doubt: event.players
-            .where((player) => player.confirmationDate == null)
-            .sortedBy((player) => player.name)
-            .map(_mapPlayerToViewModel)
-            .toList(),
-        out: event.players
+  List<NextEventPlayerViewModel> _convertToListPlayerViewModel(
+    Iterable<NextEventPlayer> players,
+  ) => players.map(_mapPlayerToViewModel).toList();
+
+  List<NextEventPlayerViewModel> _filterDoubtPlayers(
+    List<NextEventPlayer> players,
+  ) {
+    return _convertToListPlayerViewModel(
+      players.where((player) => player.confirmationDate == null)
+            .sortedBy((player) => player.name),
+    );
+  }
+
+  List<NextEventPlayerViewModel> _filterOutPlayers(
+    List<NextEventPlayer> players,
+  ) {
+    return _convertToListPlayerViewModel(
+      players
             .where((player) => player.confirmationDate != null && !player.isConfirmed)
-            .sortedBy((player) => player.confirmationDate!)
-            .map(_mapPlayerToViewModel)
-            .toList(),
-        goalKeepers: event.players
+            .sortedBy((player) => player.confirmationDate!),
+    );
+  }
+
+  List<NextEventPlayerViewModel> _filterGoalkeepers(
+    List<NextEventPlayer> players,
+  ) {
+    return _convertToListPlayerViewModel(
+      players
             .where((player) => player.confirmationDate != null && player.isConfirmed && player.position == "goalkeeper")
-            .sortedBy((player) => player.confirmationDate!)
-            .map(_mapPlayerToViewModel)
-            .toList(),
-        players: event.players
-            .where((player) => player.confirmationDate != null && player.isConfirmed && player.position != "goalkeeper")
-            .sortedBy((player) => player.confirmationDate!)
-            .map(_mapPlayerToViewModel)
-            .toList(),
-  );
+            .sortedBy((player) => player.confirmationDate!),
+    );
+  }
+
+  List<NextEventPlayerViewModel> _filterPlayers(
+    List<NextEventPlayer> players,
+  ) {
+    return _convertToListPlayerViewModel(
+      players.where((player) => player.confirmationDate != null && player.isConfirmed && player.position != "goalkeeper")
+            .sortedBy((player) => player.confirmationDate!),
+    );
+  }
+
+  NextEventViewModel _mapEventToViewModel(NextEvent event) =>
+      NextEventViewModel(
+        doubt: _filterDoubtPlayers(event.players),
+        out: _filterOutPlayers(event.players),
+        goalKeepers: _filterGoalkeepers(event.players),
+        players: _filterPlayers(event.players),
+      );
 
   NextEventPlayerViewModel _mapPlayerToViewModel(NextEventPlayer player) =>
       NextEventPlayerViewModel(
