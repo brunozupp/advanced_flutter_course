@@ -1,6 +1,9 @@
 @Timeout(Duration(seconds: 1))
 
+import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
+import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 import 'package:advanced_flutter_course/app/presentation/presenters/next_event_presenter.dart';
+import 'package:dartx/dartx.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -20,7 +23,7 @@ import '../../../helpers/fakes.dart';
 /// don't create an interface to the usecase.
 final class NextEventRxPresenter {
 
-  final Future<void> Function({
+  final Future<NextEvent> Function({
     required String groupId,
   }) nextEventLoader;
 
@@ -45,8 +48,8 @@ final class NextEventRxPresenter {
         _isBusyStream.add(true);
       }
 
-      await nextEventLoader(groupId: groupId);
-      _nextEventSubject.add(const NextEventViewModel());
+      final event = await nextEventLoader(groupId: groupId);
+      _nextEventSubject.add(_mapEventToViewModel(event));
 
     } catch (e) {
       _nextEventSubject.addError(e);
@@ -57,6 +60,20 @@ final class NextEventRxPresenter {
       }
     }
   }
+
+  NextEventViewModel _mapEventToViewModel(NextEvent event) => NextEventViewModel(
+        doubt: event.players
+            .where((player) => player.confirmationDate == null)
+            .sortedBy((player) => player.name)
+            .map(_mapPlayerToViewModel)
+            .toList(),
+  );
+
+  NextEventPlayerViewModel _mapPlayerToViewModel(NextEventPlayer player) =>
+      NextEventPlayerViewModel(
+        name: player.name,
+        initials: player.initials,
+      );
 }
 
 final class NextEventLoaderUseCaseSpy {
@@ -64,8 +81,21 @@ final class NextEventLoaderUseCaseSpy {
   int callsCount = 0;
   String? groupId;
   Error? error;
+  NextEvent output = NextEvent(
+    groupName: anyString(),
+    date: anyDate(),
+    players: [],
+  );
 
-  Future<void> call({
+  void simulatePlayers(List<NextEventPlayer> players) {
+    output = NextEvent(
+      groupName: anyString(),
+      date: anyDate(),
+      players: players,
+    );
+  }
+
+  Future<NextEvent> call({
     required String groupId,
   }) async {
     this.groupId = groupId;
@@ -74,6 +104,8 @@ final class NextEventLoaderUseCaseSpy {
     if(error != null) {
       throw error!;
     }
+
+    return output;
   }
 }
 
@@ -209,6 +241,50 @@ void main() {
         sut.nextEventStream,
         emits(const TypeMatcher<NextEventViewModel>()),
       );
+
+      await sut.loadNextEvent(
+        groupId: groupId,
+      );
+    },
+  );
+
+  test(
+    "Should build doubt list sorted by name",
+    () async {
+
+      /// The rule to a player enters to the doubt list is
+      /// if he/she doesn't have confirmationDate.
+
+      nextEventLoader.simulatePlayers([
+        NextEventPlayer(
+          id: anyString(),
+          name: 'C',
+          isConfirmed: anyBool(),
+        ),
+        NextEventPlayer(
+          id: anyString(),
+          name: 'A',
+          isConfirmed: anyBool(),
+        ),
+        NextEventPlayer(
+          id: anyString(),
+          name: 'B',
+          isConfirmed: anyBool(),
+          confirmationDate: anyDate(),
+        ),
+        NextEventPlayer(
+          id: anyString(),
+          name: 'D',
+          isConfirmed: anyBool(),
+        ),
+      ]);
+
+      sut.nextEventStream.listen((event) {
+        expect(event.doubt.length, 3);
+        expect(event.doubt[0].name, 'A');
+        expect(event.doubt[1].name, 'C');
+        expect(event.doubt[2].name, 'D');
+      });
 
       await sut.loadNextEvent(
         groupId: groupId,

@@ -2,6 +2,10 @@ import 'dart:math';
 
 String anyString() => Random().nextInt(3000).toString();
 
+bool anyBool() => Random().nextBool();
+
+DateTime anyDate() => DateTime.fromMillisecondsSinceEpoch(Random().nextInt(99999999));
+
 Map<String, dynamic> get mapNextEvent => {
   "groupName": "any name",
   "date": DateTime(2024,8,30,10,30).toIso8601String(),
