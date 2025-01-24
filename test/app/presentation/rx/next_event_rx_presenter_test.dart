@@ -48,6 +48,7 @@ final class NextEventRxPresenter {
     } catch (e) {
       _nextEventSubject.addError(e);
 
+    } finally {
       if(isReload) {
         _isBusyStream.add(false);
       }
@@ -170,6 +171,22 @@ void main() {
 
       await sut.loadNextEvent(
         groupId: groupId,
+      );
+    },
+  );
+
+  test(
+    "Should emit correct events on reload with success",
+    () async {
+
+      expectLater(
+        sut.isBusyStream,
+        emitsInOrder([true, false]),
+      );
+
+      await sut.loadNextEvent(
+        groupId: groupId,
+        isReload: true,
       );
     },
   );
