@@ -1,7 +1,7 @@
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 
-import '../../../helpers/fakes.dart';
+import '../../../mocks/fakes.dart';
 
 final class NextEventLoaderUseCaseSpy {
 

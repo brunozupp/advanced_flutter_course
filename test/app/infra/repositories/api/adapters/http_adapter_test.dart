@@ -5,7 +5,7 @@ import 'package:advanced_flutter_course/app/infra/repositories/api/adapters/http
 import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../../helpers/fakes.dart';
+import '../../../../../mocks/fakes.dart';
 import '../mocks/client_spy.dart';
 
 

@@ -6,7 +6,7 @@ import 'package:advanced_flutter_course/app/ui/pages/widgets/player_status.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../helpers/fakes.dart';
+import '../../../../mocks/fakes.dart';
 import '../../../presentation/mocks/next_event_presenter_spy.dart';
 
 void main() {

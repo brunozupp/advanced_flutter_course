@@ -4,7 +4,7 @@ import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_event_http_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../../helpers/fakes.dart';
+import '../../../../mocks/fakes.dart';
 import 'mocks/client_spy.dart';
 
 void main() {

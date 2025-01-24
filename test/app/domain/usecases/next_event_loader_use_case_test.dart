@@ -4,7 +4,7 @@ import 'package:advanced_flutter_course/app/domain/repositories/i_load_next_even
 import 'package:advanced_flutter_course/app/domain/usecases/next_event_loader_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../helpers/fakes.dart';
+import '../../../mocks/fakes.dart';
 import '../../infra/mocks/load_next_event_repository_spy.dart';
 
 void main() {

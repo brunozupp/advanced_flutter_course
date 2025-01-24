@@ -5,7 +5,7 @@ import 'package:advanced_flutter_course/app/presentation/presenters/next_event_p
 import 'package:advanced_flutter_course/app/presentation/rx/next_event_rx_presenter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../helpers/fakes.dart';
+import '../../../mocks/fakes.dart';
 import '../../domain/mocks/next_event_loader_use_case_spy.dart';
 
 
