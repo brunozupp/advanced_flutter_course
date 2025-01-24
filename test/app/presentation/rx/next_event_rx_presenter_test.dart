@@ -205,6 +205,11 @@ void main() {
 
       sut.isBusyStream.listen(neverCalled);
 
+      expectLater(
+        sut.nextEventStream,
+        emits(const TypeMatcher<NextEventViewModel>()),
+      );
+
       await sut.loadNextEvent(
         groupId: groupId,
       );
