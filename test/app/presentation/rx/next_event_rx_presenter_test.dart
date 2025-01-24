@@ -80,6 +80,7 @@ final class NextEventRxPresenter {
         initials: player.initials,
         photo: player.photo,
         position: player.position,
+        isConfirmed: player.confirmationDate == null ? null : player.isConfirmed,
       );
 }
 
@@ -310,7 +311,7 @@ void main() {
         position: anyString(),
       );
 
-      /// Verifi if the map is filling the viewmodel
+      /// Verify if the map is filling the viewmodel
       /// I will not check the confirmationDate because
       /// to have a doubt list I can not have confirmationDate set
 
@@ -375,6 +376,38 @@ void main() {
         expect(event.out[0].name, 'D');
         expect(event.out[1].name, 'C');
         expect(event.out[2].name, 'E');
+      });
+
+      await sut.loadNextEvent(
+        groupId: groupId,
+      );
+    },
+  );
+
+  test(
+    "Should map out player",
+    () async {
+
+      // I need to guarantee that the isConfirmed is false
+      final player = NextEventPlayer(
+        id: anyString(),
+        name: anyString(),
+        isConfirmed: false,
+        photo: anyString(),
+        position: anyString(),
+        confirmationDate: anyDate(),
+      );
+
+      nextEventLoader.simulatePlayers([
+        player,
+      ]);
+
+      sut.nextEventStream.listen((event) {
+        expect(event.out[0].name, player.name);
+        expect(event.out[0].initials, player.initials);
+        expect(event.out[0].isConfirmed, player.isConfirmed);
+        expect(event.out[0].photo, player.photo);
+        expect(event.out[0].position, player.position);
       });
 
       await sut.loadNextEvent(
