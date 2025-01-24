@@ -392,7 +392,7 @@ void main() {
     "Should map out player",
     () async {
 
-      // I need to guarantee that the isConfirmed is false
+      /// I need to guarantee that the isConfirmed is false
       final player = NextEventPlayer(
         id: anyString(),
         name: anyString(),
@@ -472,6 +472,39 @@ void main() {
         expect(event.goalKeepers.length, 2);
         expect(event.goalKeepers[0].name, 'F');
         expect(event.goalKeepers[1].name, 'C');
+      });
+
+      await sut.loadNextEvent(
+        groupId: groupId,
+      );
+    },
+  );
+
+  test(
+    "Should map goalkeeper player",
+    () async {
+
+      /// I need to guarantee that the isConfirmed is true
+      /// and position == "goalkeeper"
+      final player = NextEventPlayer(
+        id: anyString(),
+        name: anyString(),
+        isConfirmed: true,
+        photo: anyString(),
+        position: "goalkeeper",
+        confirmationDate: anyDate(),
+      );
+
+      nextEventLoader.simulatePlayers([
+        player,
+      ]);
+
+      sut.nextEventStream.listen((event) {
+        expect(event.goalKeepers[0].name, player.name);
+        expect(event.goalKeepers[0].initials, player.initials);
+        expect(event.goalKeepers[0].isConfirmed, player.isConfirmed);
+        expect(event.goalKeepers[0].photo, player.photo);
+        expect(event.goalKeepers[0].position, player.position);
       });
 
       await sut.loadNextEvent(
