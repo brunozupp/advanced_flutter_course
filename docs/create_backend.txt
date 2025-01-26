@@ -1,0 +1,21 @@
+This project used a backend made in node.
+To create the backend locally is required to follow the steps:
+
+1 - make sure that you have Node install.
+  1.1 - to verify this just run the command 'npm' in the terminal and if the
+        node is not installed it will return an error.
+  1.2 - to install the node just type the command in the terminal:
+        'brew install node'
+2 - create a folder named 'backend' in the root of the project
+3 - enter the folder 'backend' in the terminal
+4 - run the command 'npm init -y'
+5 - in the file '.gitignore' in the root of the main application you will
+    need to put '/backend/node_modules' to ignore the folder node_modules.
+    It can not be sent to the repository
+6 - in this backend was used the Express dependecie to upload a server to
+    be used by http. To install it, run the command in the backend folder:
+    'npm i express'
+7 - after this you need to write your API and define the port
+8 - to run this project you need to run the command in the backend folder:
+    'npm start'
+9 - to kill the server just do: 'ctrl + c'.
