@@ -1,5 +1,4 @@
 import '../../../../domain/entities/next_event_player.dart';
-import '../../../types/json_type.dart';
 import 'mapper.dart';
 
 final class NextEventPlayerMapper extends Mapper<NextEventPlayer> {

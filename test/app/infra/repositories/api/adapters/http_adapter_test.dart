@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/adapters/http_adapter.dart';
-import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../../mocks/fakes.dart';

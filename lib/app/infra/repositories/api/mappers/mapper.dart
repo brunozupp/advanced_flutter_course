@@ -1,4 +1,3 @@
-import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 
 /// This implementation has one benefit and one fail
 /// Benefit: I just need to implement the method toObject and
