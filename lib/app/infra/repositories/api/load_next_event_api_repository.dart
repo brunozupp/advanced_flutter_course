@@ -2,7 +2,6 @@ import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 
 import '../../../domain/entities/next_event.dart';
 import '../../../domain/repositories/i_load_next_event_repository.dart';
-import '../../types/json_type.dart';
 import 'clients/http_get_client.dart';
 import 'mappers/next_event_mapper.dart';
 
@@ -21,7 +20,7 @@ final class LoadNextEventApiRepository implements ILoadNextEventRepository {
   Future<NextEvent> loadNextEvent({
     required String groupId,
   }) async {
-    final event = await _httpClient.get<Json>(
+    final event = await _httpClient.get(
       url: _url,
       params: {
         "groupId": groupId,

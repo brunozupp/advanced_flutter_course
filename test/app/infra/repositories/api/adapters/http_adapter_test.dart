@@ -249,7 +249,7 @@ void main() {
             "key2": "value2",
           });
 
-          final data = await sut.get<Json>(url: url);
+          final data = await sut.get(url: url);
 
           expect(data?["key1"], "value1");
           expect(data?["key2"], "value2");
@@ -265,7 +265,7 @@ void main() {
             "key2": "value2",
           });
 
-          final data = await sut.get<Json>(url: url);
+          final data = await sut.get(url: url);
 
           expect(data?["key1"], "value1");
           expect(data?["key2"], "value2");
@@ -287,7 +287,7 @@ void main() {
             },
           ]);
 
-          final data = await sut.get<JsonList>(url: url);
+          final data = await sut.get(url: url);
 
           expect(data?[0]["key1"], "value1.1");
           expect(data?[0]["key2"], "value2.1");

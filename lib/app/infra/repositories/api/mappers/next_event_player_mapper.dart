@@ -5,7 +5,7 @@ import 'mapper.dart';
 final class NextEventPlayerMapper extends Mapper<NextEventPlayer> {
 
   @override
-  NextEventPlayer toObject(Json json) => NextEventPlayer(
+  NextEventPlayer toObject(dynamic json) => NextEventPlayer(
     id: json["id"],
     name: json["name"],
     isConfirmed: json["isConfirmed"],

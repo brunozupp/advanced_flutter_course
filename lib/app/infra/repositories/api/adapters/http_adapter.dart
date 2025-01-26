@@ -16,7 +16,7 @@ final class HttpAdapter implements HttpGetClient {
   }) : _client = client;
 
   @override
-  Future<T?> get<T>({
+  Future<dynamic> get({
     required String url,
     Json? headers,
     Json? params,
@@ -82,9 +82,11 @@ final class HttpAdapter implements HttpGetClient {
     /// I need to do this because Dart is not good when it comes to
     /// parse values, so I need to specify the type of my list as
     /// I put the type of this method where I am executed it.
-    if(T == JsonList) {
-      return responseDecode.map<Json>((e) => e as Json).toList();
-    }
+    /// This code commented below was taken off because there was
+    /// a problem during the parse. So it will return an dynamic response
+    // if(T == JsonList) {
+    //   return responseDecode.map<Json>((e) => e as Json).toList();
+    // }
 
     return responseDecode;
   }

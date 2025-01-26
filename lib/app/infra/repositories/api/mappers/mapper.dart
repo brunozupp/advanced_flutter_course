@@ -20,7 +20,7 @@ import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 ///
 abstract base class Mapper<T> {
 
-  List<T> toObjectList(JsonList list) => list.map(toObject).toList();
+  List<T> toObjectList(dynamic list) => list.map<T>(toObject).toList();
 
-  T toObject(Json json);
+  T toObject(dynamic json);
 }
