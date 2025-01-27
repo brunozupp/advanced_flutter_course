@@ -1,11 +1,10 @@
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
-import 'package:advanced_flutter_course/app/domain/repositories/i_load_next_event_repository.dart';
 
 /// Mock, Spy, Stub
 /// When I test both input and output it's a spy;
 /// When I am worried only about the input it's a mock;
 /// When I am worried only about the output it's a stub;
-class LoadNextEventRepositorySpy implements ILoadNextEventRepository {
+class LoadNextEventRepositorySpy {
 
   /// These properties make sense just in this case, when I make a Mock
   /// There is no sense doing this in a real repository implementation.
@@ -18,7 +17,6 @@ class LoadNextEventRepositorySpy implements ILoadNextEventRepository {
 
   Error? error;
 
-  @override
   Future<NextEvent> loadNextEvent({required String groupId}) async {
     this.groupId = groupId;
     callsCount++;

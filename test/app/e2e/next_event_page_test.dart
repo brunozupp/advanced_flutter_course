@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:advanced_flutter_course/app/domain/usecases/next_event_loader_usecase.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/adapters/http_adapter.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_event_api_repository.dart';
 import 'package:advanced_flutter_course/app/presentation/rx/next_event_rx_presenter.dart';
@@ -26,8 +25,7 @@ void main() {
         httpClient: httpClient,
         url: anyString(),
       );
-      final usecase = NextEventLoaderUseCase(loadNextEventRepository: repository);
-      final presenter = NextEventRxPresenter(nextEventLoader: usecase);
+      final presenter = NextEventRxPresenter(nextEventLoader: repository.loadNextEvent);
 
       final sut = MaterialApp(
         home: NextEventPage(
