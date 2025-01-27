@@ -6,12 +6,27 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final colorSchema = ColorScheme.fromSeed(
+      seedColor: Colors.teal,
+      brightness: Brightness.dark,
+    );
+
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      debugShowCheckedModeBanner: false,
+      darkTheme: ThemeData(
+        appBarTheme: AppBarTheme(
+          color: colorSchema.primaryContainer,
+        ),
+        dividerTheme: const DividerThemeData(
+          space: 0,
+        ),
+        brightness: Brightness.dark,
+        colorScheme: colorSchema,
         useMaterial3: true,
       ),
+      themeMode: ThemeMode.dark,
       home: PageFactory.makeNextEventPage(),
     );
   }

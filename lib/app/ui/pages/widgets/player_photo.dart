@@ -19,6 +19,7 @@ final class PlayerPhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
+      radius: 25,
       foregroundImage: photo != null
         ? NetworkImage(photo!)
         : null,

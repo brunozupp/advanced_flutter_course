@@ -34,6 +34,20 @@ class _NextEventPageState extends State<NextEventPage> {
     });
   }
 
+  /// I am using this just to accelerate my job because of the hot reload
+  /// from flutter that when executed runs the build method again and
+  /// rebuild the screen. Doing this, my Stream comes back to the waiting
+  /// state and will no longer show the list. This happens because the
+  /// initState where I run the load method to send data to the Stream
+  /// executes just once before the first build of the page.
+  /// And this method didUpdateWidget executes everytime my .build method
+  /// executes.
+  @override
+  void didUpdateWidget(covariant NextEventPage oldWidget) {
+    presenter.loadNextEvent(groupId: widget.groupId);
+    super.didUpdateWidget(oldWidget);
+  }
+
   void showLoading() {
     showDialog(
       context: context,
@@ -48,6 +62,9 @@ class _NextEventPageState extends State<NextEventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Next Game"),
+      ),
       body: StreamBuilder<NextEventViewModel>(
         stream: presenter.nextEventStream,
         builder: (context, snapshot) {
