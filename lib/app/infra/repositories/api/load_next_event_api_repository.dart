@@ -23,6 +23,9 @@ final class LoadNextEventApiRepository  {
   Future<NextEvent> loadNextEvent({
     required String groupId,
   }) async {
+
+    await Future.delayed(const Duration(seconds: 2));
+
     final event = await _httpClient.get(
       url: _url,
       params: {

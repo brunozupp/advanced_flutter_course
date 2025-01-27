@@ -1,3 +1,4 @@
+import 'package:awesome_flutter_extensions/awesome_flutter_extensions.dart';
 import 'package:flutter/material.dart';
 
 final class PlayerPosition extends StatelessWidget {
@@ -11,7 +12,12 @@ final class PlayerPosition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(buildPositionLabel());
+    return Text(
+      buildPositionLabel(),
+      style: context.textStyles.labelMedium.apply(
+        color: context.colors.scheme.primary.withValues(alpha: 0.7),
+      ),
+    );
   }
 
   String buildPositionLabel() => switch(position) {

@@ -31,8 +31,14 @@ class ListSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title),
-              Text(players.length.toString()),
+              Text(
+                title,
+                style: context.textStyles.titleSmall,
+              ),
+              Text(
+                players.length.toString(),
+                style: context.textStyles.titleSmall,
+              ),
             ],
           ),
         ),
@@ -58,7 +64,10 @@ class ListSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(player.name),
+                    Text(
+                      player.name,
+                      style: context.textStyles.labelLarge,
+                    ),
                     PlayerPosition(
                       position: player.position,
                     ),

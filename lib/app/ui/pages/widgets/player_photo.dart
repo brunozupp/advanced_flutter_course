@@ -1,3 +1,4 @@
+import 'package:awesome_flutter_extensions/awesome_flutter_extensions.dart';
 import 'package:flutter/material.dart';
 
 /// To widgets like this that are used in more than one page/module
@@ -24,7 +25,10 @@ final class PlayerPhoto extends StatelessWidget {
         ? NetworkImage(photo!)
         : null,
       child: photo == null
-        ? Text(initials)
+          ? Text(
+              initials,
+              style: context.textStyles.labelLarge,
+            )
         : null,
     );
   }

@@ -42,16 +42,25 @@ class _NextEventPageState extends State<NextEventPage> {
   /// executes just once before the first build of the page.
   /// And this method didUpdateWidget executes everytime my .build method
   /// executes.
-  @override
-  void didUpdateWidget(covariant NextEventPage oldWidget) {
-    presenter.loadNextEvent(groupId: widget.groupId);
-    super.didUpdateWidget(oldWidget);
-  }
+  /// Uncomment this block of code when doing tests in this page about
+  /// development.
+  // @override
+  // void didUpdateWidget(covariant NextEventPage oldWidget) {
+  //   presenter.loadNextEvent(groupId: widget.groupId);
+
+  //   presenter.isBusyStream.listen((isBusy) {
+  //     isBusy ? showLoading() : hideLoading();
+  //   });
+
+  //   super.didUpdateWidget(oldWidget);
+  // }
 
   void showLoading() {
     showDialog(
       context: context,
-      builder: (context) => const CircularProgressIndicator(),
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 
@@ -76,7 +85,9 @@ class _NextEventPageState extends State<NextEventPage> {
           /// value enters in this stream.
           /// Said that, this initial state will only happens one time
           if(snapshot.connectionState != ConnectionState.active) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
 
           if(snapshot.hasError) {
