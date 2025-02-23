@@ -19,7 +19,7 @@ void main() {
 
     httpClient = HttpGetClientSpy();
 
-    httpClient.response = mapNextEvent;
+    httpClient.response = mapNextEventApi;
 
     sut = LoadNextEventApiRepository(
       httpClient: httpClient,

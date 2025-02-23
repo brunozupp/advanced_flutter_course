@@ -17,7 +17,7 @@ void main() {
   setUp(() {
 
     client = ClientSpy();
-    client.responseJson = jsonEncode(mapNextEvent);
+    client.responseJson = jsonEncode(mapNextEventApi);
 
     sut = HttpAdapter(
       client: client,
