@@ -271,7 +271,7 @@ void main() {
       expect(find.byType(PlayerPhoto), findsNothing);
 
       expect(find.text("Algo errado aconteceu, tente novamente"), findsOneWidget);
-      expect(find.text("Recarregar"), findsOneWidget);
+      expect(find.text("RECARREGAR"), findsOneWidget);
     },
   );
 
@@ -289,7 +289,7 @@ void main() {
 
       await tester.pump();
 
-      await tester.tap(find.text("Recarregar"));
+      await tester.tap(find.text("RECARREGAR"));
 
       expect(presenter.callsCount, 2);
       expect(presenter.groupId, groupId);
