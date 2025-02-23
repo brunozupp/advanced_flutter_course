@@ -1,10 +1,9 @@
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
-import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
-import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
-import 'package:advanced_flutter_course/app/infra/repositories/api/mappers/next_event_mapper.dart';
+import 'package:advanced_flutter_course/app/infra/repositories/cache/load_next_event_cache_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../mocks/fakes.dart';
+import 'mocks/cache_get_client_spy.dart';
 
 
 /// It's interesting to have an unique Mapper to the cache layer, because
@@ -32,92 +31,6 @@ import '../../../../mocks/fakes.dart';
 /// I need to use the toIso8601String to format to a valid string format.
 /// When using the Mapper from the cache layer, I can let this attribute
 /// as it was created and save as Date Type.
-
-final class CacheGetClientSpy implements CacheGetClient {
-
-  String? key;
-  int callsCount = 0;
-  dynamic response;
-  Error? error;
-
-  @override
-  Future<dynamic> get({
-    required String key,
-  }) async {
-    this.key = key;
-    callsCount++;
-
-    if(error != null) {
-      throw error!;
-    }
-
-    return response;
-  }
-}
-
-abstract interface class CacheGetClient {
-
-  Future<dynamic> get({
-    required String key,
-  });
-}
-
-final class LoadNextEventCacheRepository  {
-
-  final CacheGetClient _cacheClient;
-  final String _key;
-
-  const LoadNextEventCacheRepository({
-    required CacheGetClient cacheClient,
-    required String key,
-  })  : _cacheClient = cacheClient,
-        _key = key;
-
-  Future<NextEvent> loadNextEvent({
-    required String groupId,
-  }) async {
-
-    final event = await _cacheClient.get(
-      key: "$_key:$groupId",
-    );
-
-    if(event == null) {
-      throw UnexpectedError();
-    }
-
-    return NextEventMapper().toObject(event);
-  }
-}
-
-abstract base class Mapper<T> {
-
-  List<T> toObjectList(dynamic list) => list.map<T>(toObject).toList();
-
-  T toObject(dynamic json);
-}
-
-final class NextEventPlayerMapper extends Mapper<NextEventPlayer> {
-
-  @override
-  NextEventPlayer toObject(dynamic json) => NextEventPlayer(
-    id: json["id"],
-    name: json["name"],
-    isConfirmed: json["isConfirmed"],
-    photo: json["photo"],
-    position: json["position"],
-    confirmationDate: json["confirmationDate"],
-  );
-}
-
-final class NextEventMapper extends Mapper<NextEvent> {
-
-  @override
-  NextEvent toObject(dynamic json) => NextEvent(
-    groupName: json["groupName"],
-    date: json["date"],
-    players: NextEventPlayerMapper().toObjectList(json["players"])
-  );
-}
 
 void main() {
 

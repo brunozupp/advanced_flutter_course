@@ -1,5 +1,5 @@
-import '../../../../domain/entities/next_event_player.dart';
-import '../../../mappers/mapper.dart';
+import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
+import 'package:advanced_flutter_course/app/infra/mappers/mapper.dart';
 
 final class NextEventPlayerMapper extends Mapper<NextEventPlayer> {
 
@@ -10,6 +10,6 @@ final class NextEventPlayerMapper extends Mapper<NextEventPlayer> {
     isConfirmed: json["isConfirmed"],
     photo: json["photo"],
     position: json["position"],
-    confirmationDate: DateTime.tryParse(json["confirmationDate"] ?? ""),
+    confirmationDate: json["confirmationDate"],
   );
 }
