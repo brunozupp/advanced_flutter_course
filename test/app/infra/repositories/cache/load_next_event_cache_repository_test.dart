@@ -38,6 +38,7 @@ final class CacheGetClientSpy implements CacheGetClient {
   String? key;
   int callsCount = 0;
   dynamic response;
+  Error? error;
 
   @override
   Future<dynamic> get({
@@ -45,6 +46,10 @@ final class CacheGetClientSpy implements CacheGetClient {
   }) async {
     this.key = key;
     callsCount++;
+
+    if(error != null) {
+      throw error!;
+    }
 
     return response;
   }
@@ -168,6 +173,20 @@ void main() {
       expect(event.players[1].position, "position 2");
       expect(event.players[1].photo, "photo 2");
       expect(event.players[1].confirmationDate, DateTime(2024,1,1,12,30));
+    },
+  );
+
+  test(
+    "Should rethrow on error",
+    () async {
+
+      final error = Error();
+
+      cacheClient.error = error;
+
+      final future = sut.loadNextEvent(groupId: groupId);
+
+      expect(future, throwsA(error));
     },
   );
 }
