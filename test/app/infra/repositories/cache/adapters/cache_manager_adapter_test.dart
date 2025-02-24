@@ -22,6 +22,8 @@ final class CacheManagerAdapter {
 
     await fileInfo?.file.exists();
 
+    await fileInfo?.file.readAsString();
+
     return null;
   }
 }
@@ -29,6 +31,7 @@ final class CacheManagerAdapter {
 final class FileSpy implements filePlugin.File {
 
   int existsCallsCount = 0;
+  int readAsStringCallsCount = 0;
   bool _fileExists = true;
 
   void simulateFileEmpty() => _fileExists = false;
@@ -126,7 +129,10 @@ final class FileSpy implements filePlugin.File {
   List<String> readAsLinesSync({Encoding encoding = utf8}) => throw UnimplementedError();
 
   @override
-  Future<String> readAsString({Encoding encoding = utf8}) => throw UnimplementedError();
+  Future<String> readAsString({Encoding encoding = utf8}) async {
+    readAsStringCallsCount++;
+    return "";
+  }
 
   @override
   String readAsStringSync({Encoding encoding = utf8}) => throw UnimplementedError();
@@ -300,6 +306,16 @@ void main() {
       final json = await sut.get(key: key);
 
       expect(json, isNull);
+    },
+  );
+
+  test(
+    "Should call filePlugin.readAsString only once",
+    () async {
+
+      await sut.get(key: key);
+
+      expect(client.file.readAsStringCallsCount, 1);
     },
   );
 }
