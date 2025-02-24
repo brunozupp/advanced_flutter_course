@@ -172,8 +172,10 @@ final class CacheManagerSpy implements BaseCacheManager {
   int getFileFromCacheCallsCount = 0;
   String? key;
   bool _isFileInfoEmpty = false;
+  DateTime _validTill = DateTime.now().add(const Duration(seconds: 2));
 
   void simulateEmptyFileInfo() => _isFileInfoEmpty = true;
+  void simulateCacheOld() => _validTill = DateTime.now().subtract(const Duration(seconds: 2));
 
   @override
   Future<void> dispose() => throw UnimplementedError();
@@ -192,7 +194,7 @@ final class CacheManagerSpy implements BaseCacheManager {
     getFileFromCacheCallsCount++;
     this.key = key;
 
-    return _isFileInfoEmpty ? null : FileInfo(FileSpy(), FileSource.Cache, DateTime.now(), '');
+    return _isFileInfoEmpty ? null : FileInfo(FileSpy(), FileSource.Cache, _validTill, '');
   }
 
   @override
@@ -245,6 +247,18 @@ void main() {
     () async {
 
       client.simulateEmptyFileInfo();
+
+      final json = await sut.get(key: key);
+
+      expect(json, isNull);
+    },
+  );
+
+  test(
+    "Should return null if cache is old",
+    () async {
+
+      client.simulateCacheOld();
 
       final json = await sut.get(key: key);
 
