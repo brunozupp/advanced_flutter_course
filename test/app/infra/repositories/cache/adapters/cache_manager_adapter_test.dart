@@ -18,12 +18,18 @@ final class CacheManagerAdapter {
   Future<dynamic> get({
     required String key,
   }) async {
-    await client.getFileFromCache(key);
+    final fileInfo = await client.getFileFromCache(key);
+
+    await fileInfo?.file.exists();
+
     return null;
   }
 }
 
 final class FileSpy implements filePlugin.File {
+
+  int existsCallsCount = 0;
+
   @override
   filePlugin.File get absolute => throw UnimplementedError();
 
@@ -52,7 +58,12 @@ final class FileSpy implements filePlugin.File {
   String get dirname => throw UnimplementedError();
 
   @override
-  Future<bool> exists() => throw UnimplementedError();
+  Future<bool> exists() async {
+
+    existsCallsCount++;
+
+    return true;
+  }
 
   @override
   bool existsSync() => throw UnimplementedError();
@@ -173,6 +184,7 @@ final class CacheManagerSpy implements BaseCacheManager {
   String? key;
   bool _isFileInfoEmpty = false;
   DateTime _validTill = DateTime.now().add(const Duration(seconds: 2));
+  FileSpy file = FileSpy();
 
   void simulateEmptyFileInfo() => _isFileInfoEmpty = true;
   void simulateCacheOld() => _validTill = DateTime.now().subtract(const Duration(seconds: 2));
@@ -194,7 +206,7 @@ final class CacheManagerSpy implements BaseCacheManager {
     getFileFromCacheCallsCount++;
     this.key = key;
 
-    return _isFileInfoEmpty ? null : FileInfo(FileSpy(), FileSource.Cache, _validTill, '');
+    return _isFileInfoEmpty ? null : FileInfo(file, FileSource.Cache, _validTill, '');
   }
 
   @override
@@ -263,6 +275,16 @@ void main() {
       final json = await sut.get(key: key);
 
       expect(json, isNull);
+    },
+  );
+
+  test(
+    "Should call filePlugin.exists only once",
+    () async {
+
+      await sut.get(key: key);
+
+      expect(client.file.existsCallsCount, 1);
     },
   );
 }
