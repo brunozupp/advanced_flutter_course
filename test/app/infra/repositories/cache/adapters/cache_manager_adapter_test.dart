@@ -29,6 +29,9 @@ final class CacheManagerAdapter {
 final class FileSpy implements filePlugin.File {
 
   int existsCallsCount = 0;
+  bool _fileExists = true;
+
+  void simulateFileEmpty() => _fileExists = false;
 
   @override
   filePlugin.File get absolute => throw UnimplementedError();
@@ -62,7 +65,7 @@ final class FileSpy implements filePlugin.File {
 
     existsCallsCount++;
 
-    return true;
+    return _fileExists;
   }
 
   @override
@@ -285,6 +288,18 @@ void main() {
       await sut.get(key: key);
 
       expect(client.file.existsCallsCount, 1);
+    },
+  );
+
+  test(
+    "Should return null if file is empty",
+    () async {
+
+      client.file.simulateFileEmpty();
+
+      final json = await sut.get(key: key);
+
+      expect(json, isNull);
     },
   );
 }
