@@ -20,11 +20,17 @@ final class CacheManagerAdapter {
   }) async {
     final fileInfo = await client.getFileFromCache(key);
 
-    await fileInfo?.file.exists();
+    if(fileInfo?.validTill.isBefore(DateTime.now()) != false) return null;
 
-    await fileInfo?.file.readAsString();
+    if(!(await fileInfo!.file.exists())) return null;
 
-    return null;
+    final data = await fileInfo.file.readAsString();
+
+    try {
+      return jsonDecode(data);
+    } catch (_) {
+      return null;
+    }
   }
 }
 
@@ -37,6 +43,7 @@ final class FileSpy implements filePlugin.File {
 
   void simulateFileEmpty() => _fileExists = false;
   void simulateInvalidResponse() => _response = 'invalid_json';
+  void simulateValidResponse(String value) => _response = value;
 
   @override
   Future<bool> exists() async {
@@ -330,6 +337,24 @@ void main() {
       final json = await sut.get(key: key);
 
       expect(json, isNull);
+    },
+  );
+
+  test(
+    "Should return json if cache is invalid",
+    () async {
+
+      client.file.simulateValidResponse('''
+        {
+          "key1": "value1",
+          "key2": "value2"
+        }
+      ''');
+
+      final json = await sut.get(key: key);
+
+      expect(json["key1"], "value1");
+      expect(json["key2"], "value2");
     },
   );
 }
