@@ -24,9 +24,10 @@ final class CacheManagerAdapter {
 
     if(!(await fileInfo!.file.exists())) return null;
 
-    final data = await fileInfo.file.readAsString();
-
     try {
+
+      final data = await fileInfo.file.readAsString();
+
       return jsonDecode(data);
     } catch (_) {
       return null;
@@ -40,10 +41,12 @@ final class FileSpy implements filePlugin.File {
   int readAsStringCallsCount = 0;
   bool _fileExists = true;
   String _response = '{}';
+  Error? _readAsStringError;
 
   void simulateFileEmpty() => _fileExists = false;
   void simulateInvalidResponse() => _response = 'invalid_json';
   void simulateValidResponse(String value) => _response = value;
+  void simulateReadAsStringError() => _readAsStringError = Error();
 
   @override
   Future<bool> exists() async {
@@ -56,6 +59,11 @@ final class FileSpy implements filePlugin.File {
   @override
   Future<String> readAsString({Encoding encoding = utf8}) async {
     readAsStringCallsCount++;
+
+    if(_readAsStringError != null) {
+      throw _readAsStringError!;
+    }
+
     return _response;
   }
 
@@ -355,6 +363,18 @@ void main() {
 
       expect(json["key1"], "value1");
       expect(json["key2"], "value2");
+    },
+  );
+
+  test(
+    "Should return null if filePlugin.readAsString fails",
+    () async {
+
+      client.file.simulateReadAsStringError();
+
+      final json = await sut.get(key: key);
+
+      expect(json, isNull);
     },
   );
 }
