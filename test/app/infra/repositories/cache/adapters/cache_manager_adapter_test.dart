@@ -22,9 +22,9 @@ final class CacheManagerAdapter {
 
     if(fileInfo?.validTill.isBefore(DateTime.now()) != false) return null;
 
-    if(!(await fileInfo!.file.exists())) return null;
-
     try {
+
+      if(!(await fileInfo!.file.exists())) return null;
 
       final data = await fileInfo.file.readAsString();
 
@@ -42,16 +42,22 @@ final class FileSpy implements filePlugin.File {
   bool _fileExists = true;
   String _response = '{}';
   Error? _readAsStringError;
+  Error? _existsError;
 
   void simulateFileEmpty() => _fileExists = false;
   void simulateInvalidResponse() => _response = 'invalid_json';
   void simulateValidResponse(String value) => _response = value;
   void simulateReadAsStringError() => _readAsStringError = Error();
+  void simulateExistsError() => _existsError = Error();
 
   @override
   Future<bool> exists() async {
 
     existsCallsCount++;
+
+    if(_existsError != null) {
+      throw _existsError!;
+    }
 
     return _fileExists;
   }
@@ -371,6 +377,18 @@ void main() {
     () async {
 
       client.file.simulateReadAsStringError();
+
+      final json = await sut.get(key: key);
+
+      expect(json, isNull);
+    },
+  );
+
+  test(
+    "Should return null if filePlugin.exists fails",
+    () async {
+
+      client.file.simulateExistsError();
 
       final json = await sut.get(key: key);
 
