@@ -21,7 +21,7 @@ class LoadNextEventRepositorySpy {
     players: [],
   );
 
-  Error? error;
+  Object? error;
 
   Future<NextEvent> loadNextEvent({required String groupId}) async {
     this.groupId = groupId;

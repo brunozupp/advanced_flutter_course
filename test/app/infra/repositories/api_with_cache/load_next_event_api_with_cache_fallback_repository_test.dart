@@ -1,3 +1,4 @@
+import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api_with_cache/load_next_event_api_with_cache_fallback_repository.dart';
@@ -105,6 +106,18 @@ void main() {
   );
 
   test(
+    "Should rethrow api error when it's SessionExpiredError",
+    () async {
+
+      apiRepo.error = SessionExpiredError();
+
+      final future = sut.loadNextEvent(groupId: groupId);
+
+      expect(future, throwsA(apiRepo.error));
+    },
+  );
+
+  test(
     "Should load event data from cache repo when api fails",
     () async {
 
@@ -129,10 +142,6 @@ void main() {
     },
   );
 
-  /// This test explains how to test an implementation that has two try/catch
-  /// One try/catch inside the other one.
-  /// I can do using a longer way - commented one
-  /// I can do using the expect that is not commented.
   test(
     "Should rethrow cache error when api and cache fails",
     () async {
@@ -143,14 +152,6 @@ void main() {
       final future = sut.loadNextEvent(groupId: groupId);
 
       expect(future, throwsA(cacheRepo.error));
-
-      // sut.loadNextEvent(groupId: groupId).then(
-      //   (_) {},
-      //   onError: (error) => expect(
-      //     error,
-      //     isA<UnexpectedError>(),
-      //   ),
-      // );
     },
   );
 }
