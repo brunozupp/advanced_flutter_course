@@ -1,4 +1,3 @@
-import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api_with_cache/load_next_event_api_with_cache_fallback_repository.dart';
@@ -135,7 +134,7 @@ void main() {
   /// I can do using a longer way - commented one
   /// I can do using the expect that is not commented.
   test(
-    "Should throw UnexpectedError when api and cache fails",
+    "Should rethrow cache error when api and cache fails",
     () async {
 
       apiRepo.error = Error();
@@ -143,7 +142,7 @@ void main() {
 
       final future = sut.loadNextEvent(groupId: groupId);
 
-      expect(future, throwsA(isA<UnexpectedError>()));
+      expect(future, throwsA(cacheRepo.error));
 
       // sut.loadNextEvent(groupId: groupId).then(
       //   (_) {},

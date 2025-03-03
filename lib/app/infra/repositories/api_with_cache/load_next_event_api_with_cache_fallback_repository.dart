@@ -1,4 +1,3 @@
-import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/clients/cache_save_client.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/mappers/next_event_cache_mapper.dart';
@@ -37,11 +36,7 @@ final class LoadNextEventApiWithCacheFallbackRepository {
       await _cacheClient.save(key: "$_key:$groupId", value: json);
       return event;
     } catch (_) {
-      try {
-        return await _loadNextEventCache(groupId: groupId);
-      } catch (_) {
-        throw UnexpectedError();
-      }
+      return await _loadNextEventCache(groupId: groupId);
     }
   }
 }
