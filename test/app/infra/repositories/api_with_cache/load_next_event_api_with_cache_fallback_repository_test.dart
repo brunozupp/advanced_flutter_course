@@ -1,3 +1,4 @@
+import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/mappers/next_event_cache_mapper.dart';
@@ -38,8 +39,12 @@ final class LoadNextEventApiWithCacheFallbackRepository {
       final json = NextEventCacheMapper().toJson(event);
       await _cacheClient.save(key: "$_key:$groupId", value: json);
       return event;
-    } catch (error) {
-      return await _loadNextEventCache(groupId: groupId);
+    } catch (_) {
+      try {
+        return await _loadNextEventCache(groupId: groupId);
+      } catch (_) {
+        throw UnexpectedError();
+      }
     }
   }
 }
@@ -249,6 +254,27 @@ void main() {
       final event = await sut.loadNextEvent(groupId: groupId);
 
       expect(event, cacheRepo.output);
+    },
+  );
+
+  /// This test explains how to test an implementation that has two try/catch
+  /// One try/catch inside the other one.
+  test(
+    "Should throw UnexpectedError when api and cache fails",
+    () async {
+
+      apiRepo.error = Error();
+      cacheRepo.error = Error();
+
+      sut.loadNextEvent(groupId: groupId).then(
+        (_) {},
+        onError: (error) => expect(
+          error,
+          isA<UnexpectedError>(),
+        ),
+      );
+
+
     },
   );
 }
