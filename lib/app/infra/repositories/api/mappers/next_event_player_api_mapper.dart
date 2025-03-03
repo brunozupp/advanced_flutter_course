@@ -1,7 +1,7 @@
 import '../../../../domain/entities/next_event_player.dart';
 import '../../../mappers/mapper.dart';
 
-final class NextEventPlayerMapper extends Mapper<NextEventPlayer> {
+final class NextEventPlayerApiMapper extends Mapper<NextEventPlayer> {
 
   @override
   NextEventPlayer toObject(dynamic json) => NextEventPlayer(

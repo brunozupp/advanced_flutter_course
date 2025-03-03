@@ -1,6 +1,6 @@
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
-import 'package:advanced_flutter_course/app/infra/repositories/cache/mappers/next_event_mapper.dart';
+import 'package:advanced_flutter_course/app/infra/repositories/cache/mappers/next_event_cache_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../mocks/fakes.dart';
@@ -25,7 +25,7 @@ final class LoadNextEventApiWithCacheFallbackRepository {
     required String groupId,
   }) async {
     final event = await _loadNextEventApi(groupId: groupId);
-    final json = NextEventMapper().toJson(event);
+    final json = NextEventCacheMapper().toJson(event);
     await _cacheClient.save(key: "$_key:$groupId", value: json);
   }
 }

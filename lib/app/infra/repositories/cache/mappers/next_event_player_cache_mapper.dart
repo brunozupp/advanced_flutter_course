@@ -2,7 +2,7 @@ import 'package:advanced_flutter_course/app/domain/entities/next_event_player.da
 import 'package:advanced_flutter_course/app/infra/mappers/mapper.dart';
 import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 
-final class NextEventPlayerMapper extends Mapper<NextEventPlayer> {
+final class NextEventPlayerCacheMapper extends Mapper<NextEventPlayer> {
 
   @override
   NextEventPlayer toObject(dynamic json) => NextEventPlayer(

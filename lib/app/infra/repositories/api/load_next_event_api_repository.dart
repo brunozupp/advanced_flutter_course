@@ -2,7 +2,7 @@ import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 
 import '../../../domain/entities/next_event.dart';
 import 'clients/http_get_client.dart';
-import 'mappers/next_event_mapper.dart';
+import 'mappers/next_event_api_mapper.dart';
 
 /// Because I don't have an usecase to be depended on an abstraction of a
 /// repository, I don't need to use an interface here to implement this
@@ -35,6 +35,6 @@ final class LoadNextEventApiRepository  {
       throw UnexpectedError();
     }
 
-    return NextEventMapper().toObject(event);
+    return NextEventApiMapper().toObject(event);
   }
 }
