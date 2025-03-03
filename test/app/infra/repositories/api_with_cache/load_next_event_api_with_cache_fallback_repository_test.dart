@@ -10,6 +10,9 @@ final class LoadNextEventApiWithCacheFallbackRepository {
   final Future<NextEvent> Function({
     required String groupId,
   }) _loadNextEventApi;
+  final Future<NextEvent> Function({
+    required String groupId,
+  }) _loadNextEventCache;
   final CacheSaveClient _cacheClient;
   final String _key;
 
@@ -17,24 +20,35 @@ final class LoadNextEventApiWithCacheFallbackRepository {
     required final Future<NextEvent> Function({
       required String groupId,
     }) loadNextEventApi,
+    required final Future<NextEvent> Function({
+      required String groupId,
+    }) loadNextEventCache,
     required CacheSaveClient cacheClient,
     required String key,
-  }) : _loadNextEventApi = loadNextEventApi, _cacheClient = cacheClient, _key = key;
+  })  : _loadNextEventApi = loadNextEventApi,
+        _loadNextEventCache = loadNextEventCache,
+        _cacheClient = cacheClient,
+        _key = key;
 
   Future<NextEvent> loadNextEvent({
     required String groupId,
   }) async {
-    final event = await _loadNextEventApi(groupId: groupId);
-    final json = NextEventCacheMapper().toJson(event);
-    await _cacheClient.save(key: "$_key:$groupId", value: json);
-    return event;
+    try {
+      final event = await _loadNextEventApi(groupId: groupId);
+      final json = NextEventCacheMapper().toJson(event);
+      await _cacheClient.save(key: "$_key:$groupId", value: json);
+      return event;
+    } catch (error) {
+      await _loadNextEventCache(groupId: groupId);
+      return NextEvent(groupName: anyString(), date: anyDate(), players: []);
+    }
   }
 }
 
 final class LoadNextEventApiRepositorySpy {
 
   String? groupId;
-  int callsCounts = 0;
+  int callsCount = 0;
 
   /// To guarantee that my other tests will have a response of success, but
   /// this response is not important to be checked I can set a default
@@ -48,11 +62,51 @@ final class LoadNextEventApiRepositorySpy {
     players: [],
   );
 
+  Error? error;
+
   Future<NextEvent> loadNextEvent({
     required String groupId,
   }) async {
     this.groupId = groupId;
-    callsCounts++;
+    callsCount++;
+
+    if(error != null) {
+      throw error!;
+    }
+
+    return output;
+  }
+}
+
+final class LoadNextEventCacheRepositorySpy {
+
+  String? groupId;
+  int callsCount = 0;
+
+  /// To guarantee that my other tests will have a response of success, but
+  /// this response is not important to be checked I can set a default
+  /// value to this output here. In the case I want to check the success
+  /// scenario where I need to check the values, I will pass a new output
+  /// inside the arrange section of my test, so I can have the control to
+  /// verify all the values.
+  NextEvent output = NextEvent(
+    groupName: anyString(),
+    date: anyDate(),
+    players: [],
+  );
+
+  Error? error;
+
+  Future<NextEvent> loadNextEvent({
+    required String groupId,
+  }) async {
+    this.groupId = groupId;
+    callsCount++;
+
+    if(error != null) {
+      throw error!;
+    }
+
     return output;
   }
 }
@@ -82,6 +136,7 @@ void main() {
   late String groupId;
   late String key;
   late LoadNextEventApiRepositorySpy apiRepo;
+  late LoadNextEventCacheRepositorySpy cacheRepo;
   late CacheSaveClientSpy cacheClient;
   late LoadNextEventApiWithCacheFallbackRepository sut;
 
@@ -89,11 +144,13 @@ void main() {
     groupId = anyString();
     key = anyString();
     apiRepo = LoadNextEventApiRepositorySpy();
+    cacheRepo = LoadNextEventCacheRepositorySpy();
     cacheClient = CacheSaveClientSpy();
     sut = LoadNextEventApiWithCacheFallbackRepository(
       key: key,
       cacheClient: cacheClient,
       loadNextEventApi: apiRepo.loadNextEvent,
+      loadNextEventCache: cacheRepo.loadNextEvent,
     );
   });
 
@@ -104,7 +161,7 @@ void main() {
       await sut.loadNextEvent(groupId: groupId);
 
       expect(apiRepo.groupId, groupId);
-      expect(apiRepo.callsCounts, 1);
+      expect(apiRepo.callsCount, 1);
     },
   );
 
@@ -168,7 +225,19 @@ void main() {
       final event = await sut.loadNextEvent(groupId: groupId);
 
       expect(event, apiRepo.output);
+    },
+  );
 
+  test(
+    "Should load event data from cache repo when api fails",
+    () async {
+
+      apiRepo.error = Error();
+
+      await sut.loadNextEvent(groupId: groupId);
+
+      expect(cacheRepo.groupId, groupId);
+      expect(cacheRepo.callsCount, 1);
     },
   );
 }
