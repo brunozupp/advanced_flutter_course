@@ -1,154 +1,27 @@
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
-import 'package:advanced_flutter_course/app/infra/repositories/cache/mappers/next_event_cache_mapper.dart';
+import 'package:advanced_flutter_course/app/infra/repositories/api_with_cache/load_next_event_api_with_cache_fallback_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../mocks/fakes.dart';
-
-final class LoadNextEventApiWithCacheFallbackRepository {
-
-  final Future<NextEvent> Function({
-    required String groupId,
-  }) _loadNextEventApi;
-  final Future<NextEvent> Function({
-    required String groupId,
-  }) _loadNextEventCache;
-  final CacheSaveClient _cacheClient;
-  final String _key;
-
-  LoadNextEventApiWithCacheFallbackRepository({
-    required final Future<NextEvent> Function({
-      required String groupId,
-    }) loadNextEventApi,
-    required final Future<NextEvent> Function({
-      required String groupId,
-    }) loadNextEventCache,
-    required CacheSaveClient cacheClient,
-    required String key,
-  })  : _loadNextEventApi = loadNextEventApi,
-        _loadNextEventCache = loadNextEventCache,
-        _cacheClient = cacheClient,
-        _key = key;
-
-  Future<NextEvent> loadNextEvent({
-    required String groupId,
-  }) async {
-    try {
-      final event = await _loadNextEventApi(groupId: groupId);
-      final json = NextEventCacheMapper().toJson(event);
-      await _cacheClient.save(key: "$_key:$groupId", value: json);
-      return event;
-    } catch (_) {
-      try {
-        return await _loadNextEventCache(groupId: groupId);
-      } catch (_) {
-        throw UnexpectedError();
-      }
-    }
-  }
-}
-
-final class LoadNextEventApiRepositorySpy {
-
-  String? groupId;
-  int callsCount = 0;
-
-  /// To guarantee that my other tests will have a response of success, but
-  /// this response is not important to be checked I can set a default
-  /// value to this output here. In the case I want to check the success
-  /// scenario where I need to check the values, I will pass a new output
-  /// inside the arrange section of my test, so I can have the control to
-  /// verify all the values.
-  NextEvent output = NextEvent(
-    groupName: anyString(),
-    date: anyDate(),
-    players: [],
-  );
-
-  Error? error;
-
-  Future<NextEvent> loadNextEvent({
-    required String groupId,
-  }) async {
-    this.groupId = groupId;
-    callsCount++;
-
-    if(error != null) {
-      throw error!;
-    }
-
-    return output;
-  }
-}
-
-final class LoadNextEventCacheRepositorySpy {
-
-  String? groupId;
-  int callsCount = 0;
-
-  /// To guarantee that my other tests will have a response of success, but
-  /// this response is not important to be checked I can set a default
-  /// value to this output here. In the case I want to check the success
-  /// scenario where I need to check the values, I will pass a new output
-  /// inside the arrange section of my test, so I can have the control to
-  /// verify all the values.
-  NextEvent output = NextEvent(
-    groupName: anyString(),
-    date: anyDate(),
-    players: [],
-  );
-
-  Error? error;
-
-  Future<NextEvent> loadNextEvent({
-    required String groupId,
-  }) async {
-    this.groupId = groupId;
-    callsCount++;
-
-    if(error != null) {
-      throw error!;
-    }
-
-    return output;
-  }
-}
-
-abstract interface class CacheSaveClient {
-  Future<void> save({
-    required String key,
-    required dynamic value,
-  });
-}
-
-final class CacheSaveClientSpy implements CacheSaveClient {
-
-  String? key;
-  dynamic value;
-
-  @override
-  Future<void> save({required String key, required value}) async {
-    this.key = key;
-    this.value = value;
-  }
-
-}
+import '../../mocks/load_next_event_repository_spy.dart';
+import '../cache/mocks/cache_save_client_spy.dart';
 
 void main() {
 
   late String groupId;
   late String key;
-  late LoadNextEventApiRepositorySpy apiRepo;
-  late LoadNextEventCacheRepositorySpy cacheRepo;
+  late LoadNextEventRepositorySpy apiRepo;
+  late LoadNextEventRepositorySpy cacheRepo;
   late CacheSaveClientSpy cacheClient;
   late LoadNextEventApiWithCacheFallbackRepository sut;
 
   setUp(() {
     groupId = anyString();
     key = anyString();
-    apiRepo = LoadNextEventApiRepositorySpy();
-    cacheRepo = LoadNextEventCacheRepositorySpy();
+    apiRepo = LoadNextEventRepositorySpy();
+    cacheRepo = LoadNextEventRepositorySpy();
     cacheClient = CacheSaveClientSpy();
     sut = LoadNextEventApiWithCacheFallbackRepository(
       key: key,
@@ -273,8 +146,6 @@ void main() {
           isA<UnexpectedError>(),
         ),
       );
-
-
     },
   );
 }

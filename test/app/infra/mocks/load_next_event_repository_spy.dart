@@ -1,5 +1,7 @@
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 
+import '../../../mocks/fakes.dart';
+
 /// Mock, Spy, Stub
 /// When I test both input and output it's a spy;
 /// When I am worried only about the input it's a mock;
@@ -13,7 +15,11 @@ class LoadNextEventRepositorySpy {
   String? groupId;
   var callsCount = 0;
 
-  NextEvent? output;
+  NextEvent output = NextEvent(
+    groupName: anyString(),
+    date: anyDate(),
+    players: [],
+  );
 
   Error? error;
 
@@ -23,6 +29,6 @@ class LoadNextEventRepositorySpy {
 
     if(error != null) throw error!;
 
-    return output!;
+    return output;
   }
 }
