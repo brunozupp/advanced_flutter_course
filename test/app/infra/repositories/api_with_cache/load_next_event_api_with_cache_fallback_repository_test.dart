@@ -132,6 +132,8 @@ void main() {
 
   /// This test explains how to test an implementation that has two try/catch
   /// One try/catch inside the other one.
+  /// I can do using a longer way - commented one
+  /// I can do using the expect that is not commented.
   test(
     "Should throw UnexpectedError when api and cache fails",
     () async {
@@ -139,13 +141,17 @@ void main() {
       apiRepo.error = Error();
       cacheRepo.error = Error();
 
-      sut.loadNextEvent(groupId: groupId).then(
-        (_) {},
-        onError: (error) => expect(
-          error,
-          isA<UnexpectedError>(),
-        ),
-      );
+      final future = sut.loadNextEvent(groupId: groupId);
+
+      expect(future, throwsA(isA<UnexpectedError>()));
+
+      // sut.loadNextEvent(groupId: groupId).then(
+      //   (_) {},
+      //   onError: (error) => expect(
+      //     error,
+      //     isA<UnexpectedError>(),
+      //   ),
+      // );
     },
   );
 }
