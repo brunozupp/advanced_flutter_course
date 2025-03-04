@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/clients/cache_get_client.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
-final class CacheManagerAdapter implements CacheGetClient {
+import '../clients/cache_save_client.dart';
+
+final class CacheManagerAdapter implements CacheGetClient, CacheSaveClient  {
 
   final BaseCacheManager client;
 
@@ -29,5 +31,13 @@ final class CacheManagerAdapter implements CacheGetClient {
     } catch (_) {
       return null;
     }
+  }
+
+  @override
+  Future<void> save({
+    required String key,
+    required value,
+  }) async {
+
   }
 }
