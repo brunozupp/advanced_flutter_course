@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../mocks/fakes.dart';
 import '../../mocks/load_next_event_repository_spy.dart';
-import '../cache/mocks/cache_save_client_spy.dart';
+import '../cache/mocks/cache_save_client_mock.dart';
 
 void main() {
 
@@ -14,7 +14,7 @@ void main() {
   late String key;
   late LoadNextEventRepositorySpy apiRepo;
   late LoadNextEventRepositorySpy cacheRepo;
-  late CacheSaveClientSpy cacheClient;
+  late CacheSaveClientMock cacheClient;
   late LoadNextEventApiWithCacheFallbackRepository sut;
 
   setUp(() {
@@ -22,7 +22,7 @@ void main() {
     key = anyString();
     apiRepo = LoadNextEventRepositorySpy();
     cacheRepo = LoadNextEventRepositorySpy();
-    cacheClient = CacheSaveClientSpy();
+    cacheClient = CacheSaveClientMock();
     sut = LoadNextEventApiWithCacheFallbackRepository(
       key: key,
       cacheClient: cacheClient,
