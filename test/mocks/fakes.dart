@@ -2,11 +2,14 @@ import 'dart:math';
 
 import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 
-String anyString() => Random().nextInt(3000).toString();
+int anyInt() => Random().nextInt(999999999);
+
+String anyString() => anyInt.toString();
 
 bool anyBool() => Random().nextBool();
 
-DateTime anyDate() => DateTime.fromMillisecondsSinceEpoch(Random().nextInt(99999999));
+DateTime anyDate() => DateTime.fromMillisecondsSinceEpoch(anyInt());
+String anyIsoDate() => DateTime.fromMillisecondsSinceEpoch(anyInt()).toIso8601String();
 
 Json get mapNextEventApi => {
   "groupName": "any name",

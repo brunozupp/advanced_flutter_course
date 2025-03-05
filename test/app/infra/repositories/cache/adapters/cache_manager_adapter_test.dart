@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:advanced_flutter_course/app/infra/repositories/cache/adapters/cache_manager_adapter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -149,8 +151,28 @@ void main() {
     () {
 
       test(
-        "test description",
-        () {},
+        "Should call putFile with correct input",
+        () async {
+
+          final value = {
+            'key1': anyString(),
+            'key2': anyIsoDate(),
+            'key3': anyBool(),
+            'key4': anyInt(),
+          };
+
+          await sut.save(key: key, value: value);
+
+          /// I need to do this to test the encoding from the value passed
+          /// to the package that I do inside de adapter. I do a reverse
+          /// engineering in this case.
+          final fileBytesDecoded = jsonDecode(utf8.decode(client.fileBytes!));
+
+          expect(client.putFileCallsCount, 1);
+          expect(client.key, key);
+          expect(client.fileExtension, 'json');
+          expect(fileBytesDecoded, value);
+        },
       );
     },
   );
