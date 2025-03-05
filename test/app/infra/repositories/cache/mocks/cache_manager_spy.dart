@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:file/file.dart';
@@ -15,7 +16,7 @@ final class CacheManagerSpy implements BaseCacheManager {
   FileSpy file = FileSpy();
   Error? _getFileFromCacheError;
   String? fileExtension;
-  Uint8List? fileBytes;
+  dynamic fileBytesDecoded;
 
   void simulateEmptyFileInfo() => _isFileInfoEmpty = true;
   void simulateCacheOld() => _validTill = DateTime.now().subtract(const Duration(seconds: 2));
@@ -45,7 +46,7 @@ final class CacheManagerSpy implements BaseCacheManager {
     putFileCallsCount++;
     this.key = url;
     this.fileExtension = fileExtension;
-    this.fileBytes = fileBytes;
+    fileBytesDecoded = jsonDecode(utf8.decode(fileBytes));
     return file;
   }
 

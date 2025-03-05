@@ -170,12 +170,10 @@ void main() {
           /// I need to do this to test the encoding from the value passed
           /// to the package that I do inside de adapter. I do a reverse
           /// engineering in this case.
-          final fileBytesDecoded = jsonDecode(utf8.decode(client.fileBytes!));
-
           expect(client.putFileCallsCount, 1);
           expect(client.key, key);
           expect(client.fileExtension, 'json');
-          expect(fileBytesDecoded, value);
+          expect(client.fileBytesDecoded, value);
         },
       );
     },
