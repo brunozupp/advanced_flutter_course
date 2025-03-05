@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/adapters/cache_manager_adapter.dart';
 import 'package:flutter_test/flutter_test.dart';
