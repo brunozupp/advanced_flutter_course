@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/adapters/cache_manager_adapter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -174,6 +175,18 @@ void main() {
           expect(client.key, key);
           expect(client.fileExtension, 'json');
           expect(client.fileBytesDecoded, value);
+        },
+      );
+
+      test(
+        "Should throw UnexpectedError when putFile fails",
+        () async {
+
+          client.simulatePutFileError();
+
+          final future = sut.save(key: key, value: value);
+
+          expect(future, throwsA(isA<UnexpectedError>()));
         },
       );
     },

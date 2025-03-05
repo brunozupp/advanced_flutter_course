@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/clients/cache_get_client.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -39,6 +40,10 @@ final class CacheManagerAdapter implements CacheGetClient, CacheSaveClient {
     required String key,
     required dynamic value,
   }) async {
-    await client.putFile(key, utf8.encode(jsonEncode(value)), fileExtension: "json");
+    try {
+      await client.putFile(key, utf8.encode(jsonEncode(value)), fileExtension: "json");
+    } catch (_) {
+      throw UnexpectedError();
+    }
   }
 }

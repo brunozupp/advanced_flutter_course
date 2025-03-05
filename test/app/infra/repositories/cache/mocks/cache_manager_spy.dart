@@ -17,10 +17,12 @@ final class CacheManagerSpy implements BaseCacheManager {
   Error? _getFileFromCacheError;
   String? fileExtension;
   dynamic fileBytesDecoded;
+  Error? _putFileError;
 
   void simulateEmptyFileInfo() => _isFileInfoEmpty = true;
   void simulateCacheOld() => _validTill = DateTime.now().subtract(const Duration(seconds: 2));
   void simulateGetFileFromCacheError() => _getFileFromCacheError = Error();
+  void simulatePutFileError() => _putFileError = Error();
 
   @override
   Future<FileInfo?> getFileFromCache(String key, {bool ignoreMemCache = false}) async {
@@ -47,6 +49,11 @@ final class CacheManagerSpy implements BaseCacheManager {
     this.key = url;
     this.fileExtension = fileExtension;
     fileBytesDecoded = jsonDecode(utf8.decode(fileBytes));
+
+    if(_putFileError != null) {
+      throw _putFileError!;
+    }
+
     return file;
   }
 
