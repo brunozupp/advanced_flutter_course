@@ -150,16 +150,20 @@ void main() {
     ".save method",
     () {
 
+      late Map<String, dynamic> value;
+
+      setUp(() {
+        value = {
+          'key1': anyString(),
+          'key2': anyIsoDate(),
+          'key3': anyBool(),
+          'key4': anyInt(),
+        };
+      });
+
       test(
         "Should call putFile with correct input",
         () async {
-
-          final value = {
-            'key1': anyString(),
-            'key2': anyIsoDate(),
-            'key3': anyBool(),
-            'key4': anyInt(),
-          };
 
           await sut.save(key: key, value: value);
 
