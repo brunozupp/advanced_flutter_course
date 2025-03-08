@@ -4,7 +4,7 @@ import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 
 int anyInt() => Random().nextInt(999999999);
 
-String anyString() => anyInt.toString();
+String anyString() => anyInt().toString();
 
 bool anyBool() => Random().nextBool();
 
