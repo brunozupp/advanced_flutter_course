@@ -38,7 +38,7 @@ Json get mapNextEventApi => {
 /// in and out from the class.
 Json get mapNextEventCache => {
   "groupName": "any name",
-  "date": DateTime(2024,1,1,10,30),
+  "date": DateTime(2024,1,1,10,30).toIso8601String(),
   "players": [
     {
       "id": "id 1",
@@ -54,7 +54,7 @@ Json get mapNextEventCache => {
       "isConfirmed": false,
       "photo": "photo 2",
       "position": "position 2",
-      "confirmationDate": DateTime(2024,1,1,12,30),
+      "confirmationDate": DateTime(2024,1,1,12,30).toIso8601String(),
     },
   ]
 };

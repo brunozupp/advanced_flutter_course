@@ -9,7 +9,7 @@
 /// to my class than it needs to work properly.
 ///
 /// So this solution is something to be balenced and verify
-/// if is something good to implement.
+/// if it is something good to implement.
 ///
 /// TODO: I can do a test about the I from SOLID, where I can
 /// divide this implementation in Mapper and MapperList, which

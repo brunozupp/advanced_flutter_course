@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../mocks/fakes.dart';
 import 'mocks/cache_get_client_spy.dart';
 
-
+/// Mappers
 /// It's interesting to have an unique Mapper to the cache layer, because
 /// it's important that the Mapper from the cache does not know about
 /// the Api layer. And another point is when I have an API that are not
@@ -31,6 +31,19 @@ import 'mocks/cache_get_client_spy.dart';
 /// I need to use the toIso8601String to format to a valid string format.
 /// When using the Mapper from the cache layer, I can let this attribute
 /// as it was created and save as Date Type.
+///
+/// P.S: I was seem that the plugin used to save the cache does not work
+/// with DateTime attributes, so I need to parse them to string in order
+/// to save them. Because of that I can have just ONE MAPPER that will
+/// work to both api and cache. In this situation I can get the exact
+/// context: when I have the control of the API/Backend it would be
+/// a waste of time to have two different implementations of mappers
+/// as it would work the same to both situations and I would have a
+/// duplication of code. But in the case where I don't have the control
+/// of the API and this API is made not following the good practices, I
+/// would be good to have two implementations because I would guarantee
+/// that my entity is correct and my mappers would work as a Anti-Corruption
+/// layer to treat the API's response.
 
 void main() {
 
