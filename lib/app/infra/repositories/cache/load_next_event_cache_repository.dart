@@ -1,7 +1,7 @@
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
+import 'package:advanced_flutter_course/app/infra/mappers/next_event_mapper.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/clients/cache_get_client.dart';
-import 'package:advanced_flutter_course/app/infra/repositories/cache/mappers/next_event_cache_mapper.dart';
 
 final class LoadNextEventCacheRepository  {
 
@@ -26,6 +26,6 @@ final class LoadNextEventCacheRepository  {
       throw UnexpectedError();
     }
 
-    return NextEventCacheMapper().toObject(event);
+    return NextEventMapper().toObject(event);
   }
 }
