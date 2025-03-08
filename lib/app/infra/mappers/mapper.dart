@@ -1,4 +1,6 @@
 
+import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
+
 /// This implementation has one benefit and one fail
 /// Benefit: I just need to implement the method toObject and
 /// every class that implements Mapper will only override the
@@ -17,9 +19,9 @@
 /// can be a solution to avoid a class has more methods than
 /// necessary
 ///
-abstract base class Mapper<T> {
-
-  List<T> toObjectList(dynamic list) => list.map<T>(toObject).toList();
+abstract interface class Mapper<T> {
 
   T toObject(dynamic json);
+
+  Json toJson(T entity);
 }

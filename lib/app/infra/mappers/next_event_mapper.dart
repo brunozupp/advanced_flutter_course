@@ -3,7 +3,7 @@ import 'package:advanced_flutter_course/app/infra/mappers/mapper.dart';
 import 'package:advanced_flutter_course/app/infra/mappers/next_event_player_mapper.dart';
 import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 
-final class NextEventMapper extends Mapper<NextEvent> {
+final class NextEventMapper implements Mapper<NextEvent> {
 
   @override
   NextEvent toObject(dynamic json) => NextEvent(
@@ -12,9 +12,10 @@ final class NextEventMapper extends Mapper<NextEvent> {
     players: NextEventPlayerMapper().toObjectList(json["players"])
   );
 
-  Json toJson(NextEvent event) => {
-    'groupName': event.groupName,
-    'date': event.date.toIso8601String(),
-    'players': NextEventPlayerMapper().toJsonList(event.players)
+  @override
+  Json toJson(NextEvent entity) => {
+    'groupName': entity.groupName,
+    'date': entity.date.toIso8601String(),
+    'players': NextEventPlayerMapper().toJsonList(entity.players)
   };
 }

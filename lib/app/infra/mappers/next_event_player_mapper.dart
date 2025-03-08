@@ -1,8 +1,8 @@
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
-import 'package:advanced_flutter_course/app/infra/mappers/mapper.dart';
+import 'package:advanced_flutter_course/app/infra/mappers/mapper_list.dart';
 import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 
-final class NextEventPlayerMapper extends Mapper<NextEventPlayer> {
+final class NextEventPlayerMapper extends MapperList<NextEventPlayer> {
 
   @override
   NextEventPlayer toObject(dynamic json) => NextEventPlayer(
@@ -16,14 +16,13 @@ final class NextEventPlayerMapper extends Mapper<NextEventPlayer> {
         : null,
   );
 
-  Json toJson(NextEventPlayer player) => {
-    'id': player.id,
-    'name': player.name,
-    'position': player.position,
-    'photo': player.photo,
-    'confirmationDate': player.confirmationDate?.toIso8601String(),
-    'isConfirmed': player.isConfirmed,
+  @override
+  Json toJson(NextEventPlayer entity) => {
+    'id': entity.id,
+    'name': entity.name,
+    'position': entity.position,
+    'photo': entity.photo,
+    'confirmationDate': entity.confirmationDate?.toIso8601String(),
+    'isConfirmed': entity.isConfirmed,
   };
-
-  JsonList toJsonList(List<NextEventPlayer> list) => list.map(toJson).toList();
 }
