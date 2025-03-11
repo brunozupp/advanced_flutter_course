@@ -36,4 +36,27 @@ void main() {
       expect(json["confirmationDate"], player.confirmationDate!.toIso8601String());
     },
   );
+
+  test(
+    "Should map to object with only required fields",
+    () {
+
+      final json = {
+        "id": anyString(),
+        "name": anyString(),
+        "isConfirmed": anyBool(),
+      };
+
+      final sut = NextEventPlayerMapper();
+
+      final player = sut.toObject(json);
+
+      expect(json["id"], player.id);
+      expect(json["name"], player.name);
+      expect(json["isConfirmed"], player.isConfirmed);
+      expect(json["position"], null);
+      expect(json["photo"], null);
+      expect(json["confirmationDate"], null);
+    },
+  );
 }
