@@ -1,3 +1,4 @@
+import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 import 'package:advanced_flutter_course/app/infra/mappers/next_event_player_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -24,8 +25,6 @@ void main() {
         "confirmationDate": anyIsoDate(),
       };
 
-      final sut = NextEventPlayerMapper();
-
       final player = sut.toObject(json);
 
       expect(json["id"], player.id);
@@ -47,8 +46,6 @@ void main() {
         "isConfirmed": anyBool(),
       };
 
-      final sut = NextEventPlayerMapper();
-
       final player = sut.toObject(json);
 
       expect(json["id"], player.id);
@@ -57,6 +54,30 @@ void main() {
       expect(json["position"], null);
       expect(json["photo"], null);
       expect(json["confirmationDate"], null);
+    },
+  );
+
+  test(
+    "Should map to json",
+    () {
+
+      final player = NextEventPlayer(
+        id: anyString(),
+        name: anyString(),
+        isConfirmed: anyBool(),
+        photo: anyString(),
+        position: anyString(),
+        confirmationDate: anyDate(),
+      );
+
+      final json = sut.toJson(player);
+
+      expect(json["id"], player.id);
+      expect(json["name"], player.name);
+      expect(json["isConfirmed"], player.isConfirmed);
+      expect(json["position"], player.position);
+      expect(json["photo"], player.photo);
+      expect(json["confirmationDate"], player.confirmationDate!.toIso8601String());
     },
   );
 }
