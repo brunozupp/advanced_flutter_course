@@ -1,0 +1,39 @@
+import 'package:advanced_flutter_course/app/infra/mappers/next_event_player_mapper.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../../../mocks/fakes.dart';
+
+void main() {
+
+  late NextEventPlayerMapper sut;
+
+  setUp(() {
+    sut = NextEventPlayerMapper();
+  });
+
+  test(
+    "Should map to object",
+    () {
+
+      final json = {
+        "id": anyString(),
+        "name": anyString(),
+        "isConfirmed": anyBool(),
+        "photo": anyString(),
+        "position": anyString(),
+        "confirmationDate": anyIsoDate(),
+      };
+
+      final sut = NextEventPlayerMapper();
+
+      final player = sut.toObject(json);
+
+      expect(json["id"], player.id);
+      expect(json["name"], player.name);
+      expect(json["isConfirmed"], player.isConfirmed);
+      expect(json["position"], player.position);
+      expect(json["photo"], player.photo);
+      expect(json["confirmationDate"], player.confirmationDate!.toIso8601String());
+    },
+  );
+}
