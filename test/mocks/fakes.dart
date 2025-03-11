@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 
 int anyInt() => Random().nextInt(999999999);
@@ -10,6 +11,20 @@ bool anyBool() => Random().nextBool();
 
 DateTime anyDate() => DateTime.fromMillisecondsSinceEpoch(anyInt());
 String anyIsoDate() => DateTime.fromMillisecondsSinceEpoch(anyInt()).toIso8601String();
+
+Json anyJson() => {
+  anyString(): anyString(),
+};
+JsonList anyJsonList() => [
+  anyJson(),
+];
+
+NextEventPlayer anyNextEventPlayer() => NextEventPlayer(
+  id: anyString(),
+  name: anyString(),
+  isConfirmed: anyBool(),
+);
+List<NextEventPlayer> anyNextEventPlayerList() => [anyNextEventPlayer()];
 
 Json get mapNextEventApi => {
   "groupName": "any name",

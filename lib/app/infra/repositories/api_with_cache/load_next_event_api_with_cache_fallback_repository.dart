@@ -1,6 +1,7 @@
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/infra/mappers/next_event_mapper.dart';
+import 'package:advanced_flutter_course/app/infra/mappers/next_event_player_mapper.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/clients/cache_save_client.dart';
 
 typedef LoadNextEventRepository = Future<NextEvent> Function({
@@ -33,7 +34,9 @@ final class LoadNextEventApiWithCacheFallbackRepository {
   }) async {
     try {
       final event = await _loadNextEventApi(groupId: groupId);
-      final json = NextEventMapper().toJson(event);
+      final json = NextEventMapper(
+        playerMapper: NextEventPlayerMapper(),
+      ).toJson(event);
       await _cacheClient.save(key: "$_key:$groupId", value: json);
       return event;
     } on SessionExpiredError {

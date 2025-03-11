@@ -1,5 +1,6 @@
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/infra/mappers/next_event_mapper.dart';
+import 'package:advanced_flutter_course/app/infra/mappers/next_event_player_mapper.dart';
 
 import '../../../domain/entities/next_event.dart';
 import 'clients/http_get_client.dart';
@@ -35,6 +36,8 @@ final class LoadNextEventApiRepository  {
       throw UnexpectedError();
     }
 
-    return NextEventMapper().toObject(event);
+    return NextEventMapper(
+      playerMapper: NextEventPlayerMapper(),
+    ).toObject(event);
   }
 }
