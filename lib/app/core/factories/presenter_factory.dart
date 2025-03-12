@@ -7,7 +7,7 @@ final class PresenterFactory {
 
   static NextEventRxPresenter makeNextEventRxPresenter() {
 
-    final repository = RepositoryFactory.makeLoadNextEventApiRepository();
+    final repository = RepositoryFactory.makeLoadNextEventApiWithCacheFallbackRepository();
 
     /// Here my NextEventRxPresenter doesn't depend on the repository, but
     /// it does depend on the method's signature. So even if I have here the
@@ -19,8 +19,10 @@ final class PresenterFactory {
     /// I didn't have any business rule inside it. So it just called
     /// the method in the repository. It was an Middle-Man.
     /// I have two principles from SOLID here.
-    /// 1 - O -> Open Closed Principle
-    /// 2 - L -> Liskov Substituion
+    /// 1 - O -> Open Closed Principle (add function without altering
+    /// what already exist)
+    /// 2 - L -> Liskov Substituion (inject function from another class
+    /// as this one has the same signature)
     /// The first one is because I used the Composite Pattern to add new
     /// functionality, so I extended what was working and didn't have
     /// to change the implementation, I just added a new one. And I
