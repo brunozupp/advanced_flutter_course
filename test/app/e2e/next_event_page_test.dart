@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:advanced_flutter_course/app/core/factories/common_factory.dart';
 import 'package:advanced_flutter_course/app/core/factories/mapper_factory.dart';
-import 'package:advanced_flutter_course/app/core/factories/repository_factory.dart';
 import 'package:advanced_flutter_course/app/infra/mappers/next_event_mapper.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/adapters/http_adapter.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_event_api_repository.dart';
@@ -135,6 +133,20 @@ void main() {
       await tester.ensureVisible(find.text("Claudio Gamarra", skipOffstage: false));
       await tester.pump();
       expect(find.text("Claudio Gamarra"), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Should present error message if api and cache fail",
+    (WidgetTester tester) async {
+
+      client.statusCode = 400;
+      cacheManager.simulateEmptyFileInfo();
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(find.text("Algo errado aconteceu, tente novamente"), findsOneWidget);
     },
   );
 }
