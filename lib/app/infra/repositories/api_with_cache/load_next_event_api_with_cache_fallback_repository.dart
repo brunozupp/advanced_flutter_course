@@ -1,7 +1,6 @@
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
-import 'package:advanced_flutter_course/app/infra/mappers/next_event_mapper.dart';
-import 'package:advanced_flutter_course/app/infra/mappers/next_event_player_mapper.dart';
+import 'package:advanced_flutter_course/app/infra/mappers/mapper.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/clients/cache_save_client.dart';
 
 typedef LoadNextEventRepository = Future<NextEvent> Function({
@@ -14,6 +13,7 @@ final class LoadNextEventApiWithCacheFallbackRepository {
   final LoadNextEventRepository _loadNextEventCache;
   final CacheSaveClient _cacheClient;
   final String _key;
+  final Mapper<NextEvent> _mapper;
 
   LoadNextEventApiWithCacheFallbackRepository({
     required final Future<NextEvent> Function({
@@ -24,9 +24,11 @@ final class LoadNextEventApiWithCacheFallbackRepository {
     }) loadNextEventCache,
     required CacheSaveClient cacheClient,
     required String key,
+    required Mapper<NextEvent> mapper,
   })  : _loadNextEventApi = loadNextEventApi,
         _loadNextEventCache = loadNextEventCache,
         _cacheClient = cacheClient,
+        _mapper = mapper,
         _key = key;
 
   Future<NextEvent> loadNextEvent({
@@ -34,9 +36,7 @@ final class LoadNextEventApiWithCacheFallbackRepository {
   }) async {
     try {
       final event = await _loadNextEventApi(groupId: groupId);
-      final json = NextEventMapper(
-        playerMapper: NextEventPlayerMapper(),
-      ).toJson(event);
+      final json = _mapper.toJson(event);
       await _cacheClient.save(key: "$_key:$groupId", value: json);
       return event;
     } on SessionExpiredError {

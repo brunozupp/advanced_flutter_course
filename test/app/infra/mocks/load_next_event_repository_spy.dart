@@ -15,11 +15,7 @@ class LoadNextEventRepositorySpy {
   String? groupId;
   var callsCount = 0;
 
-  NextEvent output = NextEvent(
-    groupName: anyString(),
-    date: anyDate(),
-    players: [],
-  );
+  NextEvent output = anyNextEvent();
 
   Object? error;
 
