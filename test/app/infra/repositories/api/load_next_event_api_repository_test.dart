@@ -1,37 +1,11 @@
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
-import 'package:advanced_flutter_course/app/infra/mappers/mapper.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_event_api_repository.dart';
-import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../mocks/fakes.dart';
+import '../../mocks/mapper_spy.dart';
 import 'mocks/http_get_client_spy.dart';
-
-final class MapperSpy<Entity> implements Mapper<Entity> {
-
-  Json? toObjectInput;
-  int toObjectInputCallsCount = 0;
-  Entity toObjectOutput;
-
-  MapperSpy({
-    required this.toObjectOutput
-  });
-
-  @override
-  Json toJson(Entity entity) {
-    // TODO: implement toJson
-    throw UnimplementedError();
-  }
-
-  @override
-  Entity toObject(json) {
-    toObjectInput = json;
-    toObjectInputCallsCount++;
-    return toObjectOutput;
-  }
-
-}
 
 void main() {
 
