@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 import 'package:advanced_flutter_course/app/infra/types/json_type.dart';
 
@@ -25,6 +26,12 @@ NextEventPlayer anyNextEventPlayer() => NextEventPlayer(
   isConfirmed: anyBool(),
 );
 List<NextEventPlayer> anyNextEventPlayerList() => [anyNextEventPlayer()];
+
+NextEvent anyNextEvent() => NextEvent(
+  groupName: anyString(),
+  date: anyDate(),
+  players: anyNextEventPlayerList(),
+);
 
 Json get mapNextEventApi => {
   "groupName": "any name",
