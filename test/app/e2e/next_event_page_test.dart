@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:advanced_flutter_course/app/infra/mappers/next_event_mapper.dart';
-import 'package:advanced_flutter_course/app/infra/mappers/next_event_player_mapper.dart';
+import 'package:advanced_flutter_course/app/core/factories/mapper_factory.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/adapters/http_adapter.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_event_api_repository.dart';
 import 'package:advanced_flutter_course/app/presentation/rx/next_event_rx_presenter.dart';
@@ -26,9 +25,7 @@ void main() {
       final repository = LoadNextEventApiRepository(
         httpClient: httpClient,
         url: anyString(),
-        mapper: NextEventMapper(
-          playerMapper: NextEventPlayerMapper(),
-        ),
+        mapper: MapperFactory.makeNextEventMapper(),
       );
       final presenter = NextEventRxPresenter(nextEventLoader: repository.loadNextEvent);
 

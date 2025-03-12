@@ -1,7 +1,6 @@
 import 'package:advanced_flutter_course/app/core/constants.dart';
 import 'package:advanced_flutter_course/app/core/factories/common_factory.dart';
-import 'package:advanced_flutter_course/app/infra/mappers/next_event_mapper.dart';
-import 'package:advanced_flutter_course/app/infra/mappers/next_event_player_mapper.dart';
+import 'package:advanced_flutter_course/app/core/factories/mapper_factory.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_event_api_repository.dart';
 
 final class RepositoryFactory {
@@ -12,9 +11,7 @@ final class RepositoryFactory {
     return LoadNextEventApiRepository(
       httpClient: CommonFactory.makeHttpAdapter(),
       url: "${Constants.BASE_URL}/groups/:groupId/next_event",
-      mapper: NextEventMapper(
-        playerMapper: NextEventPlayerMapper(),
-      ),
+      mapper: MapperFactory.makeNextEventMapper(),
     );
   }
 }
