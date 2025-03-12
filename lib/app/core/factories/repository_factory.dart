@@ -25,5 +25,13 @@ final class RepositoryFactory {
     );
   }
 
-
+  static LoadNextEventApiWithCacheFallbackRepository makeLoadNextEventApiWithCacheFallbackRepository() {
+    return LoadNextEventApiWithCacheFallbackRepository(
+      cacheClient: CommonFactory.makeCacheManagerAdapter(),
+      key: "next_event",
+      mapper: MapperFactory.makeNextEventMapper(),
+      loadNextEventApi: makeLoadNextEventApiRepository().loadNextEvent,
+      loadNextEventCache: makeLoadNextEventCacheRepository().loadNextEvent,
+    );
+  }
 }
