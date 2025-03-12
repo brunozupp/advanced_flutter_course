@@ -1,8 +1,10 @@
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
+import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/load_next_event_cache_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../mocks/fakes.dart';
+import '../../mocks/mapper_spy.dart';
 import 'mocks/cache_get_client_spy.dart';
 
 /// Mappers
@@ -51,6 +53,7 @@ void main() {
   late String key;
   late CacheGetClientSpy cacheClient;
   late LoadNextEventCacheRepository sut;
+  late MapperSpy<NextEvent> mapper;
 
   setUp(() {
 
@@ -59,11 +62,14 @@ void main() {
 
     cacheClient = CacheGetClientSpy();
 
-    cacheClient.response = mapNextEventCache;
+    mapper = MapperSpy(
+      toObjectOutput: anyNextEvent(),
+    );
 
     sut = LoadNextEventCacheRepository(
       cacheClient: cacheClient,
       key: key,
+      mapper: mapper,
     );
   });
 
@@ -80,25 +86,15 @@ void main() {
     },
   );
 
-    test(
+  test(
     "Should return NextEvent on success",
     () async {
 
       final event = await sut.loadNextEvent(groupId: groupId);
 
-      expect(event.groupName, "any name");
-      expect(event.date, DateTime(2024,1,1,10,30));
-
-      expect(event.players[0].id, "id 1");
-      expect(event.players[0].name, "name 1");
-      expect(event.players[0].isConfirmed, true);
-
-      expect(event.players[1].id, "id 2");
-      expect(event.players[1].name, "name 2");
-      expect(event.players[1].isConfirmed, false);
-      expect(event.players[1].position, "position 2");
-      expect(event.players[1].photo, "photo 2");
-      expect(event.players[1].confirmationDate, DateTime(2024,1,1,12,30));
+      expect(mapper.toObjectInput, cacheClient.response);
+      expect(mapper.toObjectInputCallsCount, 1);
+      expect(event, mapper.toObjectOutput);
     },
   );
 

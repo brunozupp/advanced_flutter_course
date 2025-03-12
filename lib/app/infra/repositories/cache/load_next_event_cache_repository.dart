@@ -1,18 +1,20 @@
 import 'package:advanced_flutter_course/app/domain/entities/domain_error.dart';
 import 'package:advanced_flutter_course/app/domain/entities/next_event.dart';
-import 'package:advanced_flutter_course/app/infra/mappers/next_event_mapper.dart';
-import 'package:advanced_flutter_course/app/infra/mappers/next_event_player_mapper.dart';
+import 'package:advanced_flutter_course/app/infra/mappers/mapper.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/clients/cache_get_client.dart';
 
 final class LoadNextEventCacheRepository  {
 
   final CacheGetClient _cacheClient;
   final String _key;
+  final Mapper<NextEvent> _mapper;
 
   const LoadNextEventCacheRepository({
     required CacheGetClient cacheClient,
     required String key,
+    required Mapper<NextEvent> mapper,
   })  : _cacheClient = cacheClient,
+        _mapper = mapper,
         _key = key;
 
   Future<NextEvent> loadNextEvent({
@@ -27,8 +29,6 @@ final class LoadNextEventCacheRepository  {
       throw UnexpectedError();
     }
 
-    return NextEventMapper(
-      playerMapper: NextEventPlayerMapper(),
-    ).toObject(event);
+    return _mapper.toObject(event);
   }
 }

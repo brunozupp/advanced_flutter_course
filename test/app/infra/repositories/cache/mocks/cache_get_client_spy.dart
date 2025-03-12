@@ -1,10 +1,12 @@
 import 'package:advanced_flutter_course/app/infra/repositories/cache/clients/cache_get_client.dart';
 
+import '../../../../../mocks/fakes.dart';
+
 final class CacheGetClientSpy implements CacheGetClient {
 
   String? key;
   int callsCount = 0;
-  dynamic response;
+  dynamic response = anyJson();
   Error? error;
 
   @override
