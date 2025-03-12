@@ -20,7 +20,7 @@ import '../infra/repositories/cache/mocks/cache_manager_spy.dart';
 
 void main() {
 
-  late final String responseMocked;
+  late final String responseJson;
   late ClientSpy client;
   late HttpAdapter httpAdapter;
   late LoadNextEventApiRepository apiRepository;
@@ -34,7 +34,7 @@ void main() {
   late Widget sut;
 
   setUpAll(() {
-    responseMocked = _getResponseJson();
+    responseJson = _getResponseJson();
   });
 
   setUp(() {
@@ -83,7 +83,37 @@ void main() {
     "Should present api data",
     (WidgetTester tester) async {
 
-      client.responseJson = responseMocked;
+      client.responseJson = responseJson;
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      /// I need to use ensureVisible because of my UI, as the list will not
+      /// show the elements without scrolling. And the method
+      /// ensureVisible asks to put the skipOffstage in the element it
+      /// will ensure visibility.
+      /// And after this I need to use the pump method to update the frames
+      /// from the screen
+      await tester.ensureVisible(find.text("Cristiano Ronaldo", skipOffstage: false));
+      await tester.pump();
+      expect(find.text("Cristiano Ronaldo"), findsOneWidget);
+
+      await tester.ensureVisible(find.text("Lionel Messi", skipOffstage: false));
+      await tester.pump();
+      expect(find.text("Lionel Messi"), findsOneWidget);
+
+      await tester.ensureVisible(find.text("Claudio Gamarra", skipOffstage: false));
+      await tester.pump();
+      expect(find.text("Claudio Gamarra"), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Should present cache data",
+    (WidgetTester tester) async {
+
+      client.statusCode = 400;
+      cacheManager.file.simulateValidResponse(responseJson);
 
       await tester.pumpWidget(sut);
       await tester.pump();
