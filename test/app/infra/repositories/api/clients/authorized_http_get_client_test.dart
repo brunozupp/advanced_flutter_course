@@ -7,7 +7,7 @@ import '../../../../../mocks/fakes.dart';
 import '../../cache/mocks/cache_get_client_spy.dart';
 import '../mocks/http_get_client_spy.dart';
 
-final class AuthorizedHttpGetClient {
+final class AuthorizedHttpGetClient implements HttpGetClient {
 
   final CacheGetClient _cacheClient;
   final HttpGetClient _httpClient;
@@ -17,7 +17,8 @@ final class AuthorizedHttpGetClient {
     required HttpGetClient httpClient,
   }) : _cacheClient = cacheClient, _httpClient = httpClient;
 
-  Future<void> get({
+  @override
+  Future<dynamic> get({
     required String url,
     Json? params,
     Json? queryString,
@@ -32,7 +33,7 @@ final class AuthorizedHttpGetClient {
       });
     }
 
-    await _httpClient.get(
+    return await _httpClient.get(
       url: url,
       params: params,
       queryString: queryString,
@@ -214,6 +215,21 @@ void main() {
       expect(
         future,
         throwsA(error),
+      );
+    },
+  );
+
+  test(
+    "Should return same result as HttpClient",
+    () async {
+
+      final response = await sut.get(
+        url: url,
+        headers: headers,
+      );
+      expect(
+        response,
+        httpClient.response,
       );
     },
   );
