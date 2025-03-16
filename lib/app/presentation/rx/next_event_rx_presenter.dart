@@ -15,7 +15,10 @@ import '../presenters/next_event_presenter.dart';
 ///
 /// But the usecase is a layer that is abstracted enough. It's rare the
 /// time I will have 2 implementations from a usecase. That's why I
-/// don't create an interface to the usecase.
+/// don't create an interface to the usecase. And I gain in the unit test
+/// because I isolate the tests from mappers that were inside this file's test
+/// so everytime I have another implementation of this Presenter I don't need
+/// to write all my mapper tests again.
 final class NextEventRxPresenter implements NextEventPresenter {
 
   final Future<NextEvent> Function({
