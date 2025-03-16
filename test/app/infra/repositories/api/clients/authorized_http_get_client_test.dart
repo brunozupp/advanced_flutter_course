@@ -21,12 +21,22 @@ final class AuthorizedHttpGetClient {
     required String url,
     Json? params,
     Json? queryString,
+    Json? headers,
   }) async {
-    await _cacheClient.get(key: 'current_user');
+    final authorizedHeader = await _cacheClient.get(key: 'current_user');
+
+    if(authorizedHeader != null) {
+      headers ??= {};
+      headers.addAll({
+        'authorization': authorizedHeader['accessToken'],
+      });
+    }
+
     await _httpClient.get(
       url: url,
       params: params,
       queryString: queryString,
+      headers: headers,
     );
   }
 }
@@ -39,6 +49,7 @@ void main() {
   late String url;
   late Json params;
   late Json queryString;
+  late Json headers;
 
   setUp(() {
     cacheClient = CacheGetClientSpy();
@@ -50,6 +61,7 @@ void main() {
     url = anyString();
     params = anyJson();
     queryString = anyJson();
+    headers = anyJson();
   });
 
   test(
@@ -74,6 +86,49 @@ void main() {
       expect(httpClient.url, url);
       expect(httpClient.params, params);
       expect(httpClient.queryString, queryString);
+    },
+  );
+
+  test(
+    "Should call HttpClient with null headers",
+    () async {
+      cacheClient.response = null;
+      await sut.get(
+        url: url,
+        headers: null,
+      );
+      expect(httpClient.headers, null);
+    },
+  );
+
+  test(
+    "Should call HttpClient with current headers",
+    () async {
+      cacheClient.response = null;
+      await sut.get(
+        url: url,
+        headers: headers,
+      );
+      expect(httpClient.headers, headers);
+    },
+  );
+
+  test(
+    "Should call HttpClient with authorization header",
+    () async {
+      cacheClient.response = {
+        'accessToken': 'any_token',
+      };
+      await sut.get(
+        url: url,
+        headers: null,
+      );
+      expect(
+        httpClient.headers,
+        {
+          'authorization': 'any_token',
+        },
+      );
     },
   );
 }
