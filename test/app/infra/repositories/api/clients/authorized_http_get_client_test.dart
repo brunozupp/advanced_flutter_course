@@ -187,4 +187,19 @@ void main() {
       );
     },
   );
+
+  test(
+    "Should rethrow on CacheClient error",
+    () async {
+      final error = Error();
+      cacheClient.error = error;
+      final future = sut.get(
+        url: url,
+      );
+      expect(
+        future,
+        throwsA(error),
+      );
+    },
+  );
 }
