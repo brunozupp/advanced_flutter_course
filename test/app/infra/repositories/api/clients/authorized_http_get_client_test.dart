@@ -131,4 +131,24 @@ void main() {
       );
     },
   );
+
+  test(
+    "Should call HttpClient with authorization header and current headers",
+    () async {
+      cacheClient.response = {
+        'accessToken': 'any_token',
+      };
+      await sut.get(
+        url: url,
+        headers: headers,
+      );
+      expect(
+        httpClient.headers,
+        {
+          ...headers,
+          'authorization': 'any_token',
+        },
+      );
+    },
+  );
 }
