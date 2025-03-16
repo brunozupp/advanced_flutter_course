@@ -25,7 +25,7 @@ final class AuthorizedHttpGetClient {
   }) async {
     final authorizedHeader = await _cacheClient.get(key: 'current_user');
 
-    if(authorizedHeader != null) {
+    if(authorizedHeader != null && authorizedHeader['accessToken'] != null) {
       headers ??= {};
       headers.addAll({
         'authorization': authorizedHeader['accessToken'],
@@ -148,6 +148,42 @@ void main() {
           ...headers,
           'authorization': 'any_token',
         },
+      );
+    },
+  );
+
+  test(
+    "Should call HttpClient with invalid cache",
+    () async {
+      cacheClient.response = {
+        'invalid': 'invalid',
+      };
+      await sut.get(
+        url: url,
+        headers: headers,
+      );
+      expect(
+        httpClient.headers,
+        {
+          ...headers,
+        },
+      );
+    },
+  );
+
+  test(
+    "Should call HttpClient with invalid cache and null headers",
+    () async {
+      cacheClient.response = {
+        'invalid': 'invalid',
+      };
+      await sut.get(
+        url: url,
+        headers: null,
+      );
+      expect(
+        httpClient.headers,
+        null,
       );
     },
   );
