@@ -4,7 +4,7 @@ import 'package:advanced_flutter_course/app/ui/pages/widgets/player_status.dart'
 import 'package:awesome_flutter_extensions/awesome_flutter_extensions.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../presentation/presenters/next_event_presenter.dart';
+import '../../../../presentation/view_models/next_event_player_view_model.dart';
 
 class ListSection extends StatelessWidget {
 

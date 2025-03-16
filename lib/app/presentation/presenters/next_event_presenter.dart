@@ -1,3 +1,5 @@
+import '../view_models/next_event_view_model.dart';
+
 abstract interface class NextEventPresenter {
 
   Stream<NextEventViewModel> get nextEventStream;
@@ -15,34 +17,37 @@ abstract interface class NextEventPresenter {
 /// viewmodels are used just inside this presenter/view.
 /// But I could have created another directory inside presentation named
 /// view_models and put these 2 if I wanted.
-final class NextEventViewModel {
+/// P.S: Now this code will be moved to its own file, so in the implementation
+/// of the specific plugin, I don't need to have those methods that create
+/// a list of ViewModels recreated in other files.
+// final class NextEventViewModel {
 
-  final List<NextEventPlayerViewModel> goalKeepers;
-  final List<NextEventPlayerViewModel> players;
-  final List<NextEventPlayerViewModel> out;
-  final List<NextEventPlayerViewModel> doubt;
+//   final List<NextEventPlayerViewModel> goalKeepers;
+//   final List<NextEventPlayerViewModel> players;
+//   final List<NextEventPlayerViewModel> out;
+//   final List<NextEventPlayerViewModel> doubt;
 
-  const NextEventViewModel({
-    this.goalKeepers = const [],
-    this.players = const [],
-    this.out = const [],
-    this.doubt = const [],
-  });
-}
+//   const NextEventViewModel({
+//     this.goalKeepers = const [],
+//     this.players = const [],
+//     this.out = const [],
+//     this.doubt = const [],
+//   });
+// }
 
-final class NextEventPlayerViewModel {
+// final class NextEventPlayerViewModel {
 
-  final String name;
-  final String initials;
-  final String? photo;
-  final String? position;
-  final bool? isConfirmed;
+//   final String name;
+//   final String initials;
+//   final String? photo;
+//   final String? position;
+//   final bool? isConfirmed;
 
-  const NextEventPlayerViewModel({
-    required this.name,
-    required this.initials,
-    this.position,
-    this.isConfirmed,
-    this.photo,
-  });
-}
+//   const NextEventPlayerViewModel({
+//     required this.name,
+//     required this.initials,
+//     this.position,
+//     this.isConfirmed,
+//     this.photo,
+//   });
+// }

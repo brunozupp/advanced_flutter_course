@@ -1,4 +1,6 @@
 import 'package:advanced_flutter_course/app/presentation/presenters/next_event_presenter.dart';
+import 'package:advanced_flutter_course/app/presentation/view_models/next_event_player_view_model.dart';
+import 'package:advanced_flutter_course/app/presentation/view_models/next_event_view_model.dart';
 import 'package:rxdart/subjects.dart';
 
 final class NextEventPresenterSpy implements NextEventPresenter {

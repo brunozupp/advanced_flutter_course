@@ -2,6 +2,7 @@ import 'package:advanced_flutter_course/app/ui/pages/next_event/widgets/next_eve
 import 'package:flutter/material.dart';
 
 import '../../../presentation/presenters/next_event_presenter.dart';
+import '../../../presentation/view_models/next_event_view_model.dart';
 import 'widgets/list_section.dart';
 
 final class NextEventPage extends StatefulWidget {

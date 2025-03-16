@@ -1,8 +1,7 @@
-import 'package:dartx/dartx.dart';
+import 'package:advanced_flutter_course/app/presentation/view_models/next_event_view_model.dart';
 import 'package:rxdart/subjects.dart';
 
 import '../../domain/entities/next_event.dart';
-import '../../domain/entities/next_event_player.dart';
 import '../presenters/next_event_presenter.dart';
 
 /// There is no need to have an abstraction from the Usecase to be passed
@@ -49,7 +48,7 @@ final class NextEventRxPresenter implements NextEventPresenter {
       }
 
       final event = await nextEventLoader(groupId: groupId);
-      _nextEventSubject.add(_mapEventToViewModel(event));
+      _nextEventSubject.add(NextEventViewModel.fromEntity(event));
 
     } catch (e) {
       _nextEventSubject.addError(e);
@@ -60,63 +59,4 @@ final class NextEventRxPresenter implements NextEventPresenter {
       }
     }
   }
-
-  List<NextEventPlayerViewModel> _convertToListPlayerViewModel(
-    Iterable<NextEventPlayer> players,
-  ) => players.map(_mapPlayerToViewModel).toList();
-
-  List<NextEventPlayerViewModel> _filterDoubtPlayers(
-    List<NextEventPlayer> players,
-  ) {
-    return _convertToListPlayerViewModel(
-      players.where((player) => player.confirmationDate == null)
-            .sortedBy((player) => player.name),
-    );
-  }
-
-  List<NextEventPlayerViewModel> _filterOutPlayers(
-    List<NextEventPlayer> players,
-  ) {
-    return _convertToListPlayerViewModel(
-      players
-            .where((player) => player.confirmationDate != null && !player.isConfirmed)
-            .sortedBy((player) => player.confirmationDate!),
-    );
-  }
-
-  List<NextEventPlayerViewModel> _filterGoalkeepers(
-    List<NextEventPlayer> players,
-  ) {
-    return _convertToListPlayerViewModel(
-      players
-            .where((player) => player.confirmationDate != null && player.isConfirmed && player.position == "goalkeeper")
-            .sortedBy((player) => player.confirmationDate!),
-    );
-  }
-
-  List<NextEventPlayerViewModel> _filterPlayers(
-    List<NextEventPlayer> players,
-  ) {
-    return _convertToListPlayerViewModel(
-      players.where((player) => player.confirmationDate != null && player.isConfirmed && player.position != "goalkeeper")
-            .sortedBy((player) => player.confirmationDate!),
-    );
-  }
-
-  NextEventViewModel _mapEventToViewModel(NextEvent event) =>
-      NextEventViewModel(
-        doubt: _filterDoubtPlayers(event.players),
-        out: _filterOutPlayers(event.players),
-        goalKeepers: _filterGoalkeepers(event.players),
-        players: _filterPlayers(event.players),
-      );
-
-  NextEventPlayerViewModel _mapPlayerToViewModel(NextEventPlayer player) =>
-      NextEventPlayerViewModel(
-        name: player.name,
-        initials: player.initials,
-        photo: player.photo,
-        position: player.position,
-        isConfirmed: player.confirmationDate == null ? null : player.isConfirmed,
-      );
 }

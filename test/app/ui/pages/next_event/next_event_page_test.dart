@@ -1,4 +1,4 @@
-import 'package:advanced_flutter_course/app/presentation/presenters/next_event_presenter.dart';
+import 'package:advanced_flutter_course/app/presentation/view_models/next_event_player_view_model.dart';
 import 'package:advanced_flutter_course/app/ui/pages/next_event/next_event_page.dart';
 import 'package:advanced_flutter_course/app/ui/pages/widgets/player_photo.dart';
 import 'package:advanced_flutter_course/app/ui/pages/widgets/player_position.dart';
