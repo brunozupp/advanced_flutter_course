@@ -1,4 +1,4 @@
-@Timeout(Duration(seconds: 1))
+@Timeout(Duration(seconds: 1)) library;
 
 import 'package:advanced_flutter_course/app/domain/entities/next_event_player.dart';
 import 'package:advanced_flutter_course/app/presentation/presenters/next_event_presenter.dart';
