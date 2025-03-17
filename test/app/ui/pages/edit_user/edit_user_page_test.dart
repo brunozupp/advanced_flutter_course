@@ -1,5 +1,7 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../../mocks/fakes.dart';
 
 class EditUserPage extends StatefulWidget {
   const EditUserPage({
@@ -7,7 +9,7 @@ class EditUserPage extends StatefulWidget {
     required this.loadUserData,
   });
 
-  final Future<void> Function() loadUserData;
+  final Future<EditUserViewModel> Function() loadUserData;
 
   @override
   State<EditUserPage> createState() => _EditUserPageState();
@@ -17,41 +19,204 @@ class _EditUserPageState extends State<EditUserPage> {
 
   @override
   void initState() {
-
-    widget.loadUserData();
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+
+    return Scaffold(
+      body: FutureBuilder(
+        future: widget.loadUserData(),
+        builder: (context, snapshot) {
+          if(snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
+
+          if(snapshot.hasError) {
+            return const Center(
+              child: Text('Error'),
+            );
+          }
+
+          if(snapshot.hasData) {
+
+            final user = snapshot.data!;
+
+            return Column(
+              children: [
+                RadioListTile(
+                  value: true,
+                  groupValue: user.isNaturalPerson,
+                  onChanged: (value) {},
+                  title: const Text('Pessoa física'),
+                ),
+                RadioListTile(
+                  value: false,
+                  groupValue: user.isNaturalPerson,
+                  onChanged: (value) {},
+                  title: const Text('Pessoa jurídica'),
+                ),
+              ],
+            );
+          }
+
+          return SizedBox.fromSize();
+        },
+      ),
+    );
   }
 }
 
-final class LoadUserDataMock {
+final class LoadUserDataSpy {
 
   bool isCalled = false;
+  EditUserViewModel response = EditUserViewModel(
+    isNaturalPerson: anyBool(),
+  );
 
-  Future<void> call() async {
+  Future<EditUserViewModel> call() async {
     isCalled = true;
+    return response;
   }
+}
+
+final class EditUserViewModel {
+
+  EditUserViewModel({
+    required this.isNaturalPerson,
+  });
+
+  final bool isNaturalPerson;
 }
 
 void main() {
+
+  late LoadUserDataSpy loadUserData;
+
+  late Widget sut;
+
+  setUp(() {
+    loadUserData = LoadUserDataSpy();
+
+    sut = MaterialApp(
+      home: EditUserPage(
+        loadUserData: loadUserData.call,
+      ),
+    );
+  });
 
   testWidgets(
     "should load user data on page init",
     (WidgetTester tester) async {
 
-      final loadUserData = LoadUserDataMock();
-
-      final sut = EditUserPage(
-        loadUserData: loadUserData.call,
-      );
       await tester.pumpWidget(sut);
 
       expect(loadUserData.isCalled, true);
+    },
+  );
+
+  testWidgets(
+    "Should have both radios inside the screen with correct names",
+    (WidgetTester tester) async {
+
+      loadUserData.response = EditUserViewModel(
+        isNaturalPerson: true,
+      );
+
+      await tester.pumpWidget(sut);
+
+      /// Used everytime I want to refresh my virtual screen so the frames
+      /// is updated and I can see the changes in my screen. In this case,
+      /// after calling the method in the initState I need to refresh the
+      /// frames so the screen will be able to update itself.
+      await tester.pump();
+
+      final finderRadioListTile = find.byType(RadioListTile<bool>);
+      expect(finderRadioListTile, findsExactly(2));
+
+      final radiosWidget = tester.widgetList<RadioListTile>(finderRadioListTile).toList();
+      final finderNaturalPerson = find.byWidget(radiosWidget.where((radio) => radio.value).first);
+      final finderLegalPerson = find.byWidget(radiosWidget.where((radio) => !radio.value).first);
+
+      expect(finderNaturalPerson, findsOneWidget);
+      expect(finderLegalPerson, findsOneWidget);
+
+      /// Both expects will look for the Pessoa física in the screen, but
+      /// the first implementation is isolated in the component, so I can
+      /// have this same text wherever in my screen, but if it's not inside
+      /// the RadioListTile it will give me an error. The second one will
+      /// try to find this text in all my screen, it's not isolated as the
+      /// first one.
+      expect(
+        find.descendant(
+          of: finderRadioListTile,
+          matching: find.text('Pessoa jurídica'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Pessoa jurídica'),
+        findsOneWidget,
+      );
+
+      expect(
+        find.descendant(
+          of: finderRadioListTile,
+          matching: find.text('Pessoa física'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Pessoa física'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    "Should check natural person",
+    (WidgetTester tester) async {
+
+      loadUserData.response = EditUserViewModel(
+        isNaturalPerson: true,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      final finderRadioListTile = find.byType(RadioListTile<bool>);
+      final radiosWidget = tester.widgetList<RadioListTile>(finderRadioListTile).toList();
+      final finderNaturalPerson = find.byWidget(radiosWidget.where((radio) => radio.value).first);
+      final finderLegalPerson = find.byWidget(radiosWidget.where((radio) => !radio.value).first);
+
+      /// To test the properties from the widget I need to convert the Finder
+      /// object in a Widget using the tester.widget passing the Finder from
+      /// the widget I wanted. I can not forget to write the type of my widget.
+      expect(tester.widget<RadioListTile>(finderNaturalPerson).checked, true);
+      expect(tester.widget<RadioListTile>(finderLegalPerson).checked, false);
+    },
+  );
+
+  testWidgets(
+    "Should check legal person",
+    (WidgetTester tester) async {
+
+      loadUserData.response = EditUserViewModel(
+        isNaturalPerson: false,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      final finderRadioListTile = find.byType(RadioListTile<bool>);
+
+      final radiosWidget = tester.widgetList<RadioListTile>(finderRadioListTile).toList();
+      final finderNaturalPerson = find.byWidget(radiosWidget.where((radio) => radio.value).first);
+      final finderLegalPerson = find.byWidget(radiosWidget.where((radio) => !radio.value).first);
+
+      expect(tester.widget<RadioListTile>(finderNaturalPerson).checked, false);
+      expect(tester.widget<RadioListTile>(finderLegalPerson).checked, true);
     },
   );
 }
