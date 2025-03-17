@@ -5,9 +5,15 @@ const app = express()
 app.get('/api/groups/:groupId/next_event', (request, response) => {
 
   if(request.params['groupId'] != 'valid_id') {
-    response
+    return response
       .status(400)
       .send(Error('Invalid id'))
+  }
+
+  if(request.params['authorization'] != 'valid_token') {
+    return response
+      .status(401)
+      .send(Error('Unauthorized'))
   }
 
   response.send({
