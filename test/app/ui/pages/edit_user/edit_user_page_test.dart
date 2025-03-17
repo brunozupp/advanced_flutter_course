@@ -116,6 +116,14 @@ void main() {
     },
   );
 
+  ({Finder finderNaturalPerson, Finder finderLegalPerson}) getFinderRadios(WidgetTester tester) {
+    final finderRadioListTile = find.byType(RadioListTile<bool>);
+    final radiosWidget = tester.widgetList<RadioListTile>(finderRadioListTile).toList();
+    final finderNaturalPerson = find.byWidget(radiosWidget.where((radio) => radio.value).first);
+    final finderLegalPerson = find.byWidget(radiosWidget.where((radio) => !radio.value).first);
+    return (finderNaturalPerson: finderNaturalPerson, finderLegalPerson: finderLegalPerson);
+  }
+
   testWidgets(
     "Should have both radios inside the screen with correct names",
     (WidgetTester tester) async {
@@ -135,9 +143,7 @@ void main() {
       final finderRadioListTile = find.byType(RadioListTile<bool>);
       expect(finderRadioListTile, findsExactly(2));
 
-      final radiosWidget = tester.widgetList<RadioListTile>(finderRadioListTile).toList();
-      final finderNaturalPerson = find.byWidget(radiosWidget.where((radio) => radio.value).first);
-      final finderLegalPerson = find.byWidget(radiosWidget.where((radio) => !radio.value).first);
+      final (:finderNaturalPerson, :finderLegalPerson) = getFinderRadios(tester);
 
       expect(finderNaturalPerson, findsOneWidget);
       expect(finderLegalPerson, findsOneWidget);
@@ -185,10 +191,7 @@ void main() {
       await tester.pumpWidget(sut);
       await tester.pump();
 
-      final finderRadioListTile = find.byType(RadioListTile<bool>);
-      final radiosWidget = tester.widgetList<RadioListTile>(finderRadioListTile).toList();
-      final finderNaturalPerson = find.byWidget(radiosWidget.where((radio) => radio.value).first);
-      final finderLegalPerson = find.byWidget(radiosWidget.where((radio) => !radio.value).first);
+      final (:finderNaturalPerson, :finderLegalPerson) = getFinderRadios(tester);
 
       /// To test the properties from the widget I need to convert the Finder
       /// object in a Widget using the tester.widget passing the Finder from
@@ -209,11 +212,7 @@ void main() {
       await tester.pumpWidget(sut);
       await tester.pump();
 
-      final finderRadioListTile = find.byType(RadioListTile<bool>);
-
-      final radiosWidget = tester.widgetList<RadioListTile>(finderRadioListTile).toList();
-      final finderNaturalPerson = find.byWidget(radiosWidget.where((radio) => radio.value).first);
-      final finderLegalPerson = find.byWidget(radiosWidget.where((radio) => !radio.value).first);
+      final (:finderNaturalPerson, :finderLegalPerson) = getFinderRadios(tester);
 
       expect(tester.widget<RadioListTile>(finderNaturalPerson).checked, false);
       expect(tester.widget<RadioListTile>(finderLegalPerson).checked, true);
