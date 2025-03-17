@@ -11,7 +11,11 @@ final class RepositoryFactory {
 
   static LoadNextEventApiRepository makeLoadNextEventApiRepository() {
     return LoadNextEventApiRepository(
-      httpClient: CommonFactory.makeHttpAdapter(),
+      /// The factory from the Decorator implementation
+      /// Here I am respecting the Liskov principle that says I can
+      /// replace a class if both have the same interface
+      httpClient: CommonFactory.makeAuthorizedHttpGetClient(),
+      //httpClient: CommonFactory.makeHttpAdapter(),
       url: "${Constants.BASE_URL}/groups/:groupId/next_event",
       mapper: MapperFactory.makeNextEventMapper(),
     );
