@@ -1,4 +1,3 @@
-import 'package:advanced_flutter_course/app/core/constants.dart';
 import 'package:advanced_flutter_course/app/core/factories/common_factory.dart';
 import 'package:advanced_flutter_course/app/core/factories/mapper_factory.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/load_next_event_api_repository.dart';
@@ -16,7 +15,7 @@ final class RepositoryFactory {
       /// replace a class if both have the same interface
       httpClient: CommonFactory.makeAuthorizedHttpGetClient(),
       //httpClient: CommonFactory.makeHttpAdapter(),
-      url: "${Constants.BASE_URL}/groups/:groupId/next_event",
+      url: "${CommonFactory.makeBaseUrl()}/groups/:groupId/next_event",
       mapper: MapperFactory.makeNextEventMapper(),
     );
   }

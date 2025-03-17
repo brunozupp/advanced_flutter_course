@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:advanced_flutter_course/app/core/constants.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/adapters/http_adapter.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/api/clients/authorized_http_get_client.dart';
 import 'package:advanced_flutter_course/app/infra/repositories/cache/adapters/cache_manager_adapter.dart';
@@ -7,6 +10,10 @@ import 'package:http/http.dart';
 final class CommonFactory {
 
   CommonFactory._();
+
+  static String makeBaseUrl() {
+    return Platform.isIOS ? Constants.BASE_URL_IOS : Constants.BASE_URL_ANDROID;
+  }
 
   static HttpAdapter makeHttpAdapter() {
     return HttpAdapter(
