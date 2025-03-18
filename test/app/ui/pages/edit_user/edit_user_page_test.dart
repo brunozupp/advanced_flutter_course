@@ -70,13 +70,13 @@ class _EditUserPageState extends State<EditUserPage> {
 
 final class LoadUserDataSpy {
 
-  bool isCalled = false;
+  int callsCount = 0;
   EditUserViewModel response = EditUserViewModel(
     isNaturalPerson: anyBool(),
   );
 
   Future<EditUserViewModel> call() async {
-    isCalled = true;
+    callsCount++;
     return response;
   }
 }
@@ -112,7 +112,7 @@ void main() {
 
       await tester.pumpWidget(sut);
 
-      expect(loadUserData.isCalled, true);
+      expect(loadUserData.callsCount, 1);
     },
   );
 
