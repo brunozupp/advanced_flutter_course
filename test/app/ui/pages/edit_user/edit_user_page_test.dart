@@ -116,9 +116,16 @@ void main() {
     },
   );
 
+  /// This is an approach I have to minimize the amount of code my file has
+  /// and gain the possibility to reuse this code in many tests inside this
+  /// file. For now I am using the Extension approach and this approach.
   ({Finder finderNaturalPerson, Finder finderLegalPerson}) getFinderRadios(WidgetTester tester) {
     final finderRadioListTile = find.byType(RadioListTile<bool>);
     final radiosWidget = tester.widgetList<RadioListTile>(finderRadioListTile).toList();
+
+    /// To test the properties from the widget I need to convert the Finder
+    /// object in a Widget using the tester.widget passing the Finder from
+    /// the widget I wanted. I can not forget to write the type of my widget.
     final finderNaturalPerson = find.byWidget(radiosWidget.where((radio) => radio.value).first);
     final finderLegalPerson = find.byWidget(radiosWidget.where((radio) => !radio.value).first);
     return (finderNaturalPerson: finderNaturalPerson, finderLegalPerson: finderLegalPerson);
@@ -191,13 +198,8 @@ void main() {
       await tester.pumpWidget(sut);
       await tester.pump();
 
-      final (:finderNaturalPerson, :finderLegalPerson) = getFinderRadios(tester);
-
-      /// To test the properties from the widget I need to convert the Finder
-      /// object in a Widget using the tester.widget passing the Finder from
-      /// the widget I wanted. I can not forget to write the type of my widget.
-      expect(tester.widget<RadioListTile>(finderNaturalPerson).checked, true);
-      expect(tester.widget<RadioListTile>(finderLegalPerson).checked, false);
+      expect(tester.naturalPersonRadio.checked, true);
+      expect(tester.legalPersonRadio.checked, false);
     },
   );
 
@@ -212,10 +214,23 @@ void main() {
       await tester.pumpWidget(sut);
       await tester.pump();
 
-      final (:finderNaturalPerson, :finderLegalPerson) = getFinderRadios(tester);
-
-      expect(tester.widget<RadioListTile>(finderNaturalPerson).checked, false);
-      expect(tester.widget<RadioListTile>(finderLegalPerson).checked, true);
+      expect(tester.naturalPersonRadio.checked, false);
+      expect(tester.legalPersonRadio.checked, true);
     },
   );
+}
+
+/// This is another option I have to refactor my tests.
+/// Using this I gain the possibility to add helpers inside the WidgetTester
+/// so I can replace the Records approach for this one.
+extension EditUserPageExtension on WidgetTester {
+
+  Finder get _finderRadioListTile => find.byType(RadioListTile<bool>);
+  Iterable<RadioListTile> get _radiosWidget => widgetList(_finderRadioListTile);
+
+  Finder get finderNaturalPerson => find.byWidget(_radiosWidget.where((radio) => radio.value).first);
+  Finder get finderLegalPerson => find.byWidget(_radiosWidget.where((radio) => !radio.value).first);
+
+  RadioListTile get naturalPersonRadio => widget(finderNaturalPerson);
+  RadioListTile get legalPersonRadio => widget(finderLegalPerson);
 }
