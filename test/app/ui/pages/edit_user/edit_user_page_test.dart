@@ -35,7 +35,7 @@ class _EditUserPageState extends State<EditUserPage> {
 
           if(snapshot.hasError) {
             return const Center(
-              child: Text('Error'),
+              child: Text('Error to load data'),
             );
           }
 
@@ -90,6 +90,7 @@ final class LoadUserDataSpy {
     showCPF: anyBool(),
     showCNPJ: anyBool(),
   );
+  Error? _error;
 
   void mockResponse({
     bool? isNaturalPerson,
@@ -107,8 +108,13 @@ final class LoadUserDataSpy {
     );
   }
 
+  void mockError() => _error = Error();
+
   Future<EditUserViewModel> call() async {
     callsCount++;
+
+    if(_error != null) throw _error!;
+
     return _response;
   }
 }
@@ -173,6 +179,35 @@ void main() {
       expect(tester.finderSpinner, findsNothing);
     },
   );
+
+  testWidgets(
+    "should handle spinner on error",
+    (WidgetTester tester) async {
+
+      loadUserData.mockError();
+
+      await tester.pumpWidget(sut);
+
+      expect(tester.finderSpinner, findsOneWidget);
+
+      await tester.pump();
+
+      expect(tester.finderSpinner, findsNothing);
+    },
+  );
+
+  testWidgets(
+    "should show message from error when initial fetching fails",
+    (WidgetTester tester) async {
+
+      loadUserData.mockError();
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderErrorMessage, findsOneWidget);
+    },
+  ); // Error to load data
 
   /// This is an approach I have to minimize the amount of code my file has
   /// and gain the possibility to reuse this code in many tests inside this
@@ -423,4 +458,6 @@ extension EditUserPageExtension on WidgetTester {
   TextFormField get textFormFieldCNPJ => widget(find.ancestor(of: finderCNPJ, matching: find.byType(TextFormField)));
 
   Finder get finderSpinner => find.byType(CircularProgressIndicator);
+
+  Finder get finderErrorMessage => find.text('Error to load data');
 }
