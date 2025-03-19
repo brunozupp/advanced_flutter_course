@@ -160,6 +160,20 @@ void main() {
     },
   );
 
+  testWidgets(
+    "should handle spinner on loading",
+    (WidgetTester tester) async {
+
+      await tester.pumpWidget(sut);
+
+      expect(tester.finderSpinner, findsOneWidget);
+
+      await tester.pump();
+
+      expect(tester.finderSpinner, findsNothing);
+    },
+  );
+
   /// This is an approach I have to minimize the amount of code my file has
   /// and gain the possibility to reuse this code in many tests inside this
   /// file. For now I am using the Extension approach and this approach.
@@ -407,4 +421,6 @@ extension EditUserPageExtension on WidgetTester {
 
   Finder get finderCNPJ => find.text('CNPJ');
   TextFormField get textFormFieldCNPJ => widget(find.ancestor(of: finderCNPJ, matching: find.byType(TextFormField)));
+
+  Finder get finderSpinner => find.byType(CircularProgressIndicator);
 }
