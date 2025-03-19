@@ -63,6 +63,12 @@ class _EditUserPageState extends State<EditUserPage> {
                       label: Text('CPF'),
                     ),
                   ),
+                if(user.showCNPJ)
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      label: Text('CNPJ'),
+                    ),
+                  ),
               ],
             );
           }
@@ -80,15 +86,18 @@ final class LoadUserDataSpy {
   EditUserViewModel _response = EditUserViewModel(
     isNaturalPerson: anyBool(),
     showCPF: anyBool(),
+    showCNPJ: anyBool(),
   );
 
   void mockResponse({
     bool? isNaturalPerson,
     bool? showCPF,
+    bool? showCNPJ,
   }) {
     _response = EditUserViewModel(
       isNaturalPerson: isNaturalPerson ?? anyBool(),
       showCPF: showCPF ?? anyBool(),
+      showCNPJ: showCNPJ ?? anyBool(),
     );
   }
 
@@ -103,10 +112,12 @@ final class EditUserViewModel {
   EditUserViewModel({
     required this.isNaturalPerson,
     required this.showCPF,
+    required this.showCNPJ,
   });
 
   final bool isNaturalPerson;
   final bool showCPF;
+  final bool showCNPJ;
 }
 
 void main() {
@@ -267,6 +278,36 @@ void main() {
       expect(tester.finderCPF, findsNothing);
     },
   );
+
+  testWidgets(
+    "Should show CNPJ",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        showCNPJ: true,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderCNPJ, findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Should hide CNPJ",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        showCNPJ: false,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderCNPJ, findsNothing);
+    },
+  );
 }
 
 /// This is another option I have to refactor my tests.
@@ -284,4 +325,5 @@ extension EditUserPageExtension on WidgetTester {
   RadioListTile get legalPersonRadio => widget(finderLegalPerson);
 
   Finder get finderCPF => find.text('CPF');
+  Finder get finderCNPJ => find.text('CNPJ');
 }
