@@ -57,6 +57,12 @@ class _EditUserPageState extends State<EditUserPage> {
                   onChanged: (value) {},
                   title: const Text('Pessoa jurídica'),
                 ),
+                if(user.showCPF)
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      label: Text('CPF'),
+                    ),
+                  ),
               ],
             );
           }
@@ -71,13 +77,24 @@ class _EditUserPageState extends State<EditUserPage> {
 final class LoadUserDataSpy {
 
   int callsCount = 0;
-  EditUserViewModel response = EditUserViewModel(
+  EditUserViewModel _response = EditUserViewModel(
     isNaturalPerson: anyBool(),
+    showCPF: anyBool(),
   );
+
+  void mockResponse({
+    bool? isNaturalPerson,
+    bool? showCPF,
+  }) {
+    _response = EditUserViewModel(
+      isNaturalPerson: isNaturalPerson ?? anyBool(),
+      showCPF: showCPF ?? anyBool(),
+    );
+  }
 
   Future<EditUserViewModel> call() async {
     callsCount++;
-    return response;
+    return _response;
   }
 }
 
@@ -85,9 +102,11 @@ final class EditUserViewModel {
 
   EditUserViewModel({
     required this.isNaturalPerson,
+    required this.showCPF,
   });
 
   final bool isNaturalPerson;
+  final bool showCPF;
 }
 
 void main() {
@@ -135,7 +154,7 @@ void main() {
     "Should have both radios inside the screen with correct names",
     (WidgetTester tester) async {
 
-      loadUserData.response = EditUserViewModel(
+      loadUserData.mockResponse(
         isNaturalPerson: true,
       );
 
@@ -191,7 +210,7 @@ void main() {
     "Should check natural person",
     (WidgetTester tester) async {
 
-      loadUserData.response = EditUserViewModel(
+      loadUserData.mockResponse(
         isNaturalPerson: true,
       );
 
@@ -207,7 +226,7 @@ void main() {
     "Should check legal person",
     (WidgetTester tester) async {
 
-      loadUserData.response = EditUserViewModel(
+      loadUserData.mockResponse(
         isNaturalPerson: false,
       );
 
@@ -216,6 +235,36 @@ void main() {
 
       expect(tester.naturalPersonRadio.checked, false);
       expect(tester.legalPersonRadio.checked, true);
+    },
+  );
+
+  testWidgets(
+    "Should show CPF",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        showCPF: true,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderCPF, findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Should hide CPF",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        showCPF: false,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderCPF, findsNothing);
     },
   );
 }
@@ -233,4 +282,6 @@ extension EditUserPageExtension on WidgetTester {
 
   RadioListTile get naturalPersonRadio => widget(finderNaturalPerson);
   RadioListTile get legalPersonRadio => widget(finderLegalPerson);
+
+  Finder get finderCPF => find.text('CPF');
 }
