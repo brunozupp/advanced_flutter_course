@@ -59,12 +59,14 @@ class _EditUserPageState extends State<EditUserPage> {
                 ),
                 if(user.showCPF)
                   TextFormField(
+                    initialValue: user.cpf,
                     decoration: const InputDecoration(
                       label: Text('CPF'),
                     ),
                   ),
                 if(user.showCNPJ)
                   TextFormField(
+                    initialValue: user.cnpj,
                     decoration: const InputDecoration(
                       label: Text('CNPJ'),
                     ),
@@ -93,11 +95,15 @@ final class LoadUserDataSpy {
     bool? isNaturalPerson,
     bool? showCPF,
     bool? showCNPJ,
+    String? cpf,
+    String? cnpj,
   }) {
     _response = EditUserViewModel(
       isNaturalPerson: isNaturalPerson ?? anyBool(),
       showCPF: showCPF ?? anyBool(),
       showCNPJ: showCNPJ ?? anyBool(),
+      cpf: cpf,
+      cnpj: cnpj,
     );
   }
 
@@ -113,18 +119,23 @@ final class EditUserViewModel {
     required this.isNaturalPerson,
     required this.showCPF,
     required this.showCNPJ,
+    this.cpf,
+    this.cnpj,
   });
 
   final bool isNaturalPerson;
   final bool showCPF;
   final bool showCNPJ;
+  final String? cpf;
+  final String? cnpj;
 }
 
 void main() {
 
   late LoadUserDataSpy loadUserData;
-
   late Widget sut;
+  late String cpf;
+  late String cnpj;
 
   setUp(() {
     loadUserData = LoadUserDataSpy();
@@ -134,6 +145,9 @@ void main() {
         loadUserData: loadUserData.call,
       ),
     );
+
+    cpf = anyString();
+    cnpj = anyString();
   });
 
   testWidgets(
@@ -308,6 +322,70 @@ void main() {
       expect(tester.finderCNPJ, findsNothing);
     },
   );
+
+  testWidgets(
+    "Should fill CPF",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        cpf: cpf,
+        showCPF: true,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.textFormFieldCPF.initialValue, cpf);
+    },
+  );
+
+  testWidgets(
+    "Should clear CPF",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        cpf: null,
+        showCPF: true,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.textFormFieldCPF.initialValue, isEmpty);
+    },
+  );
+
+  testWidgets(
+    "Should fill CNPJ",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        cnpj: cnpj,
+        showCNPJ: true,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.textFormFieldCNPJ.initialValue, cnpj);
+    },
+  );
+
+  testWidgets(
+    "Should clear CNPJ",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        cnpj: null,
+        showCNPJ: true,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.textFormFieldCNPJ.initialValue, isEmpty);
+    },
+  );
 }
 
 /// This is another option I have to refactor my tests.
@@ -325,5 +403,8 @@ extension EditUserPageExtension on WidgetTester {
   RadioListTile get legalPersonRadio => widget(finderLegalPerson);
 
   Finder get finderCPF => find.text('CPF');
+  TextFormField get textFormFieldCPF => widget(find.ancestor(of: finderCPF, matching: find.byType(TextFormField)));
+
   Finder get finderCNPJ => find.text('CNPJ');
+  TextFormField get textFormFieldCNPJ => widget(find.ancestor(of: finderCNPJ, matching: find.byType(TextFormField)));
 }
