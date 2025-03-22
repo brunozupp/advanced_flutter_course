@@ -73,6 +73,10 @@ class _EditUserPageState extends State<EditUserPage> {
                       errorText: user.isCNPJValid == true ? null : 'Valor inválido',
                     ),
                   ),
+                ElevatedButton(
+                  onPressed: user.isFormValid == true ? () {} : null,
+                  child: const Text('Salvar'),
+                ),
               ],
             );
           }
@@ -102,6 +106,7 @@ final class LoadUserDataSpy {
     String? cnpj,
     bool? isCPFValid,
     bool? isCNPJValid,
+    bool? isFormValid,
   }) {
     _response = EditUserViewModel(
       isNaturalPerson: isNaturalPerson ?? anyBool(),
@@ -109,6 +114,7 @@ final class LoadUserDataSpy {
       showCNPJ: showCNPJ ?? anyBool(),
       isCPFValid: isCPFValid ?? anyBool(),
       isCNPJValid: isCNPJValid ?? anyBool(),
+      isFormValid: isFormValid ?? anyBool(),
       cpf: cpf,
       cnpj: cnpj,
     );
@@ -135,6 +141,7 @@ final class EditUserViewModel {
     this.cnpj,
     this.isCPFValid,
     this.isCNPJValid,
+    this.isFormValid,
   });
 
   final bool isNaturalPerson;
@@ -144,6 +151,7 @@ final class EditUserViewModel {
   final String? cnpj;
   final bool? isCPFValid;
   final bool? isCNPJValid;
+  final bool? isFormValid;
 }
 
 void main() {
@@ -509,6 +517,38 @@ void main() {
       expect(tester.finderCNPJError, findsNothing);
     },
   );
+
+  testWidgets(
+    "Should enable save button",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        isFormValid: true,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderSaveButton, findsOneWidget);
+      expect(tester.elevatedButtonSave.enabled, true);
+    },
+  );
+
+  testWidgets(
+    "Should disable save button",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        isFormValid: false,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderSaveButton, findsOneWidget);
+      expect(tester.elevatedButtonSave.enabled, false);
+    },
+  );
 }
 
 /// This is another option I have to refactor my tests.
@@ -537,4 +577,7 @@ extension EditUserPageExtension on WidgetTester {
 
   Finder get finderCPFError => find.descendant(of: find.byWidget(textFormFieldCPF), matching: find.text('Valor inválido'));
   Finder get finderCNPJError => find.descendant(of: find.byWidget(textFormFieldCNPJ), matching: find.text('Valor inválido'));
+
+  Finder get finderSaveButton => find.byType(ElevatedButton);
+  ElevatedButton get elevatedButtonSave => widget<ElevatedButton>(finderSaveButton);
 }
