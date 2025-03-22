@@ -60,15 +60,17 @@ class _EditUserPageState extends State<EditUserPage> {
                 if(user.showCPF)
                   TextFormField(
                     initialValue: user.cpf,
-                    decoration: const InputDecoration(
-                      label: Text('CPF'),
+                    decoration: InputDecoration(
+                      label: const Text('CPF'),
+                      errorText: user.isCPFValid == true ? null : 'Valor inválido',
                     ),
                   ),
                 if(user.showCNPJ)
                   TextFormField(
                     initialValue: user.cnpj,
-                    decoration: const InputDecoration(
-                      label: Text('CNPJ'),
+                    decoration: InputDecoration(
+                      label: const Text('CNPJ'),
+                      errorText: user.isCNPJValid == true ? null : 'Valor inválido',
                     ),
                   ),
               ],
@@ -98,11 +100,15 @@ final class LoadUserDataSpy {
     bool? showCNPJ,
     String? cpf,
     String? cnpj,
+    bool? isCPFValid,
+    bool? isCNPJValid,
   }) {
     _response = EditUserViewModel(
       isNaturalPerson: isNaturalPerson ?? anyBool(),
       showCPF: showCPF ?? anyBool(),
       showCNPJ: showCNPJ ?? anyBool(),
+      isCPFValid: isCPFValid ?? anyBool(),
+      isCNPJValid: isCNPJValid ?? anyBool(),
       cpf: cpf,
       cnpj: cnpj,
     );
@@ -127,6 +133,8 @@ final class EditUserViewModel {
     required this.showCNPJ,
     this.cpf,
     this.cnpj,
+    this.isCPFValid,
+    this.isCNPJValid,
   });
 
   final bool isNaturalPerson;
@@ -134,6 +142,8 @@ final class EditUserViewModel {
   final bool showCNPJ;
   final String? cpf;
   final String? cnpj;
+  final bool? isCPFValid;
+  final bool? isCNPJValid;
 }
 
 void main() {
@@ -435,6 +445,38 @@ void main() {
       expect(tester.textFormFieldCNPJ.initialValue, isEmpty);
     },
   );
+
+  testWidgets(
+    "Should show CPF error",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        showCPF: true,
+        isCPFValid: false,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderCPFError, findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Should hide CPF error",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        showCPF: true,
+        isCPFValid: true,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderCPFError, findsNothing);
+    },
+  );
 }
 
 /// This is another option I have to refactor my tests.
@@ -460,4 +502,6 @@ extension EditUserPageExtension on WidgetTester {
   Finder get finderSpinner => find.byType(CircularProgressIndicator);
 
   Finder get finderErrorMessage => find.text('Error to load data');
+
+  Finder get finderCPFError => find.descendant(of: find.byWidget(textFormFieldCPF), matching: find.text('Valor inválido'));
 }
