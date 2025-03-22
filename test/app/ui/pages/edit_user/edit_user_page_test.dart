@@ -477,6 +477,38 @@ void main() {
       expect(tester.finderCPFError, findsNothing);
     },
   );
+
+  testWidgets(
+    "Should show CNPJ error",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        showCNPJ: true,
+        isCNPJValid: false,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderCNPJError, findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    "Should hide CNPJ error",
+    (WidgetTester tester) async {
+
+      loadUserData.mockResponse(
+        showCNPJ: true,
+        isCNPJValid: true,
+      );
+
+      await tester.pumpWidget(sut);
+      await tester.pump();
+
+      expect(tester.finderCNPJError, findsNothing);
+    },
+  );
 }
 
 /// This is another option I have to refactor my tests.
@@ -504,4 +536,5 @@ extension EditUserPageExtension on WidgetTester {
   Finder get finderErrorMessage => find.text('Error to load data');
 
   Finder get finderCPFError => find.descendant(of: find.byWidget(textFormFieldCPF), matching: find.text('Valor inválido'));
+  Finder get finderCNPJError => find.descendant(of: find.byWidget(textFormFieldCNPJ), matching: find.text('Valor inválido'));
 }
